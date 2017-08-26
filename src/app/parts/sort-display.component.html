@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <button *ngIf="display" (click)="display = false" class="btn btn-link"><b class="glyphicon glyphicon-chevron-down"></b></button>
+    <button *ngIf="!display" (click)="display = true" class="btn btn-link"><b class="glyphicon glyphicon-chevron-right"></b></button>
+    Sort</div>
+  <div class="panel-body" *ngIf="display">
+    <h3>Current sort criteria</h3>
+      <em *ngIf="comparator.criterias.length === 0">No sort criteria added</em>
+      <div class="row">
+        <div class="col-lg-3 well" *ngFor="let criteria of comparator.criterias">
+          <button (click)="comparator.reverseCriteria(criteria)" class="btn btn-xs btn-primary" style="float: right; vertical-align: middle;"><b class="{{reverseClass(criteria)}}"></b></button>
+          <button (click)="comparator.removeCriteria(criteria)" class="btn btn-xs btn-danger" style="float: right; vertical-align: middle;"><b class="glyphicon glyphicon-remove"></b></button>
+          {{criteria.display()}}
+        </div>
+      </div>
+    <h3>Available criteria</h3>
+    <div class="row">
+    <div class="col-lg-3 well" *ngFor="let criteria of availableCriteria()">
+      <button (click)="comparator.addCriteria(criteria)" class="btn btn-xs btn-success" style="float: right; vertical-align: middle;"><b class="glyphicon glyphicon-plus"></b></button>
+      {{criteria.display()}}
+    </div>
+    </div>
+  </div>
+</div>

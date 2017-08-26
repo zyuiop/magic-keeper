@@ -1,4 +1,5 @@
 import {MagicOwnedCard} from "./magic-owned-card";
+import {getInternalValue} from "./utils";
 
 export abstract class CardFilter<T>  {
   protected _field: string;
@@ -12,21 +13,13 @@ export abstract class CardFilter<T>  {
   }
 
   abstract check(card: MagicOwnedCard): boolean;
-
-  protected getInternalValue(card: any, field: string): T {
-    const index = field.indexOf(".");
-    if (index !== -1) {
-      return this.getInternalValue(card[field.substr(0, index)], field.substr(index + 1)) as T;
-    }
-    return card[field] as T;
-  }
 }
 
 export class NumericFilter extends CardFilter<number> {
   comparator = ">=";
 
   check(card: MagicOwnedCard): boolean {
-    const internalValue = this.getInternalValue(card, this._field);
+    const internalValue = getInternalValue<number>(card, this._field);
 
     if (this.comparator === null || this.value <= 0 || this.value === null || isNaN(this.value)) {
       return true;
@@ -53,10 +46,10 @@ export class NumericFilter extends CardFilter<number> {
 
 export class StringFilter extends CardFilter<string> {
   check(card: MagicOwnedCard): boolean {
-    if (this.value === null) {
+    if (this.value === null || this.value === "") {
       return true;
     }
 
-    return this.getInternalValue(card, this._field).indexOf(this.value) !== -1;
+    return getInternalValue<string>(card, this._field).indexOf(this.value) !== -1;
   }
 }

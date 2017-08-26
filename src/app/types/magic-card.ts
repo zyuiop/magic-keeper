@@ -10,7 +10,7 @@ export class MagicCard {
   supertypes: string[];
   types: string[];
   subtypes: string[];
-  rarity: string[];
+  rarity: string;
   set: string;
   setName: string;
   text: string;

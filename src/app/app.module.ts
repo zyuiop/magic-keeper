@@ -18,11 +18,12 @@ import {
   GalleryDisplayComponent, InfoListDisplayComponent,
   StandardDisplayComponent
 } from "./displays/list-display-components";
+import {SortDisplayComponent} from "./parts/sort-display.component";
 
 @NgModule({
   declarations: [
     AppComponent, CardSearcherComponent, CardDisplayComponent, CardSummaryComponent, CardListComponent, ReplaceNl,
-    ReplaceMana, RarityPipe, FilterDisplayComponent, StandardDisplayComponent, GalleryDisplayComponent, InfoListDisplayComponent
+    ReplaceMana, RarityPipe, FilterDisplayComponent, StandardDisplayComponent, GalleryDisplayComponent, InfoListDisplayComponent, SortDisplayComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpModule

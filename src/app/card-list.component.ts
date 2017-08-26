@@ -3,6 +3,10 @@ import {MagicOwnedCard} from "./types/magic-owned-card";
 import {MagicLibraryService} from "./magic-library.service";
 import {CardFilter, NumericFilter, StringFilter} from "./types/card-filter";
 import {DISPLAYS} from "./displays/list-display-components";
+import {
+  Comparator, NumberCriteria, SortCriteria, StringCriteria, StringNumberCriteria,
+  TypeCriteria
+} from "./sort/sort";
 
 @Component({
   templateUrl: './card-list.component.html',
@@ -11,18 +15,26 @@ import {DISPLAYS} from "./displays/list-display-components";
 export class CardListComponent {
   private _cards: Map<number, MagicOwnedCard>;
   filters: CardFilter<any>[] = [
-    new NumericFilter("amount", "Nombre de cartes", 0),
-    new NumericFilter("amountFoil", "Nombre de cartes foil", 0),
-    new NumericFilter("card.cmc", "Coût de mana", 0),
-    new StringFilter("card.name", "Nom de la carte", null),
-    new StringFilter("card.setName", "Nom du set", null),
-    new StringFilter("card.rarity", "Rareté", null)
+    new NumericFilter("amount", "Cards amount", 0),
+    new NumericFilter("amountFoil", "Foil cards amount", 0),
+    new NumericFilter("card.cmc", "Converted mana cost", 0),
+    new StringFilter("card.name", "Card name", null),
+    new StringFilter("card.setName", "Set name", null),
+    new StringFilter("card.rarity", "Rarity", null),
+    new StringFilter("card.type", "Type", null),
+    new StringFilter("card.colors", "Color", null),
+    new StringFilter("card.colorIdentity", "Color Identity (R, U, ...)", null)
   ];
   displays = DISPLAYS;
   display = "standard";
+  private _comparator = new Comparator([]);
 
   constructor(private lib: MagicLibraryService) {
     this._cards = lib.cards;
+  }
+
+  get comparator(): Comparator {
+    return this._comparator;
   }
 
   get cards(): MagicOwnedCard[] {
@@ -38,22 +50,7 @@ export class CardListComponent {
         }
         return true;
       })
-      .sort((oc1, oc2) => {
-        const c1 = oc1.card, c2 = oc2.card;
-        if (c1.types[0] !== c2.types[0]) {
-          return c1.types[0].localeCompare(c2.types[0]); // easier for now
-        }
-
-        if (c1.cmc !== c2.cmc) {
-          return c1.cmc - c2.cmc;
-        }
-
-        if (c1.number !== c2.number) {
-          return +c1.number - +c2.number;
-        }
-
-        return c1.multiverseid - c2.multiverseid;
-      });
+      .sort((c1, c2) => this._comparator.compare(c1, c2));
   }
 
   get total(): number {

@@ -2,7 +2,8 @@
 <div class="panel panel-default">
   <div class="panel-heading">Add a card</div>
   <div class="panel-body">
-    <div class="row">
+      <p><b>Please note:</b> to add a multiside card or a split card, type the number + the letter a (example : 150 becomes 150a)</p>
+
       <div class="form-inline">
         <select class="form-control" [(ngModel)]="set" id="set-selector">
           <option *ngFor="let s of sets" value="{{s.code}}">{{s.name}} ({{s.code}})</option>
@@ -15,7 +16,6 @@
         <input class="form-control" *ngIf="currentCard" type="number" (keydown.enter)="onValidate()" [(ngModel)]="amountFoil"
                placeholder="Amount (Foil)">
       </div>
-    </div>
 
     <br />
 
