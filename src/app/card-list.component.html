@@ -1,0 +1,41 @@
+<h1>Card List <small>(tracking <b>{{total}}</b> cards)</small></h1>
+
+<app-card-searcher></app-card-searcher>
+
+<table class="table table-bordered">
+  <tr>
+    <th>Image</th>
+    <th>Description</th>
+    <th class="col-lg-2">Stock</th>
+  </tr>
+
+  <tr *ngFor="let card of cards">
+    <td>
+      <img src="{{card.card.imageUrl}}">
+    </td>
+
+    <td>
+      <app-card-summary [card]="card.card"></app-card-summary>
+      <p>{{card.card.types[0]}} {{card.card.cmc}} {{card.card.number}}</p>
+    </td>
+
+    <td>En votre possession :
+      <br/>
+          <b>{{card.amount}}</b> normale(s)
+          <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
+            <b class="glyphicon glyphicon-minus"></b>
+          </button>
+          <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
+            <b class="glyphicon glyphicon-plus"></b>
+          </button>
+      <br/>
+          <b>{{card.amountFoil}}</b> foil
+          <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
+            <b class="glyphicon glyphicon-minus"></b>
+          </button>
+          <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
+            <b class="glyphicon glyphicon-plus"></b>
+          </button>
+    </td>
+  </tr>
+</table>

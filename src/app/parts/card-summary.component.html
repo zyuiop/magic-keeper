@@ -1,0 +1,3 @@
+<h3>{{card.name}} <span [innerHtml]="card.manaCost | replacemana"></span></h3>
+<p [innerHtml]="card.text | replacenl | replacemana:'small'"></p>
+<p style="font-style: italic" [innerHtml]="card.flavor | replacenl"></p>

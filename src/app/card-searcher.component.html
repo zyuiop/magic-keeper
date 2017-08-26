@@ -1,0 +1,27 @@
+<div *ngIf="message" class="alert alert-success" [innerHtml]="message"></div>
+<div class="panel panel-default">
+  <div class="panel-heading">Ajouter une carte</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-inline">
+        <select class="form-control" [(ngModel)]="set" id="set-selector">
+          <option *ngFor="let s of sets" value="{{s.code}}">{{s.name}} ({{s.code}})</option>
+        </select>
+
+        <input class="form-control" #cardNumber [(ngModel)]="number" (keydown.enter)="onSearch()" placeholder="N° carte + enter">
+
+        <input class="form-control" #cardAmount *ngIf="currentCard" type="number" (keydown.enter)="onValidate()"
+               [(ngModel)]="amount" placeholder="Qté">
+        <input class="form-control" *ngIf="currentCard" type="number" (keydown.enter)="onValidate()" [(ngModel)]="amountFoil"
+               placeholder="Qté (Foil)">
+      </div>
+    </div>
+
+    <br />
+
+    <app-card-display [card]="currentCard"></app-card-display>
+  </div>
+</div>
+
+
+
