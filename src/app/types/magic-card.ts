@@ -1,6 +1,7 @@
 export class MagicCard {
   name: string;
   names: string[]; // for split cards
+  otherSide: MagicCard; // for split cards // TODO : maybe there are some cards that are split AND reversible
   manaCost: string;
   cmc: number;
   colors: string[];

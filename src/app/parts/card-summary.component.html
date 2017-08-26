@@ -1,7 +1,11 @@
-<h3>{{card.name}} <span [innerHtml]="card.manaCost | replacemana"></span>
-  <small> <span class="label {{card.rarity | rarityLabel}}">{{card.rarity}}</span></small></h3>
-<p><b>{{card.type}}</b> <span *ngIf="card.power && card.toughness">| <b>{{card.power}} / {{card.toughness}}</b></span></p>
-<p *ngIf="!reducedInfo && card.text" [innerHtml]="card.text | replacenl | replacemana:'small'"></p>
-<p *ngIf="!reducedInfo && card.flavor" style="font-style: italic" [innerHtml]="card.flavor | replacenl"></p>
-<br>
-<p><em>{{card.setName}}</em> - n° {{card.number}}</p>
+<div class="{{card.otherSide && !reducedInfo ? 'row' : ''}}">
+<div class="{{card.otherSide && !reducedInfo ? 'col-lg-6' : ''}}">
+  <h3>{{card.name}} <span [innerHtml]="card.manaCost | replacemana"></span>
+    <small> <span class="label {{card.rarity | rarityLabel}}">{{card.rarity}}</span></small></h3>
+  <p><b>{{card.type}}</b> <span *ngIf="card.power && card.toughness">| <b>{{card.power}} / {{card.toughness}}</b></span></p>
+  <p *ngIf="!reducedInfo && card.text" [innerHtml]="card.text | replacenl | replacemana:'small'"></p>
+  <p *ngIf="!reducedInfo && card.flavor" style="font-style: italic" [innerHtml]="card.flavor | replacenl"></p>
+</div>
+  <app-card-summary *ngIf="card.otherSide && !secondSide" [card]="card.otherSide" [secondSide]="true" [reducedInfo]="reducedInfo"></app-card-summary>
+</div>
+<p *ngIf="!secondSide && (!card.otherSide || !reducedInfo)" class="{{card.otherSide ? 'col-lg-12' : ''}}"><em>{{card.setName}}</em> - n° {{card.number}}</p>

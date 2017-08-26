@@ -10,9 +10,9 @@
   </tr>
 
   <tr *ngFor="let card of cards">
-    <td>{{card.card.name}} <span style="float: right;" class="label {{card.card.rarity | rarityLabel}}">{{card.card.rarity}}</span></td>
-    <td><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span></td>
-    <td>{{card.card.type}}</td>
+    <td>{{card.card.name}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.name}})</small> <span style="float: right;" class="label {{card.card.rarity | rarityLabel}}">{{card.card.rarity}}</span></td>
+    <td><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span> <small *ngIf="card.card.otherSide">(<span [innerHtml]="card.card.otherSide.manaCost | replacemana:'small'"></span>)</small></td>
+    <td>{{card.card.type}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.type}})</small></td>
     <td>{{card.card.power}}</td>
     <td>{{card.card.toughness}}</td>
     <td>

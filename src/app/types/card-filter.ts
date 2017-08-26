@@ -1,5 +1,6 @@
 import {MagicOwnedCard} from "./magic-owned-card";
 import {getInternalValue} from "./utils";
+import {isUndefined} from "util";
 
 export abstract class CardFilter<T>  {
   protected _field: string;
@@ -51,5 +52,34 @@ export class StringFilter extends CardFilter<string> {
     }
 
     return getInternalValue<string>(card, this._field).indexOf(this.value) !== -1;
+  }
+}
+
+export class SelectFilter extends StringFilter {
+  values: Map<string, string> = new Map();
+
+  constructor(field: string, displayName: string, values: Map<string, string>, defaultValue: string) {
+    super(field, displayName, defaultValue);
+    this.values = values;
+  }
+}
+
+export class StringArrayFilter extends CardFilter<string> {
+  check(card: MagicOwnedCard): boolean {
+    if (this.value === null || this.value === "") {
+      return true;
+    }
+
+    const array = getInternalValue<string[]>(card, this._field);
+    if (isUndefined(array)) {
+      return false;
+    }
+
+    for (const s of array) {
+      if (s.indexOf(this.value) !== -1) {
+        return true;
+      }
+    }
+    return false;
   }
 }

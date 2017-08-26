@@ -20,8 +20,14 @@
         <div class="col-sm-6" *ngIf="isNumeric(filter)">
           <input class="form-control" [(ngModel)]="filter.value" type="number">
         </div>
-        <div class="col-sm-7" *ngIf="!isNumeric(filter)">
+        <div class="col-sm-7" *ngIf="!isNumeric(filter) && !isSelect(filter)">
           <input class="form-control" [(ngModel)]="filter.value">
+        </div>
+        <div class="col-sm-7" *ngIf="isSelect(filter)">
+          <select class="form-control" [(ngModel)]="filter.value">
+            <option value="{{null}}"></option>
+            <option *ngFor="let opt of selectFilter(filter).values.entries()" value="{{opt[0]}}">{{opt[1]}}</option>
+          </select>
         </div>
       </div>
     </div>

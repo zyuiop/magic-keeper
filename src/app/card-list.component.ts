@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MagicOwnedCard} from "./types/magic-owned-card";
 import {MagicLibraryService} from "./magic-library.service";
-import {CardFilter, NumericFilter, StringFilter} from "./types/card-filter";
+import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "./types/card-filter";
 import {DISPLAYS} from "./displays/list-display-components";
 import {
   Comparator, NumberCriteria, SortCriteria, StringCriteria, StringNumberCriteria,
@@ -22,8 +22,8 @@ export class CardListComponent {
     new StringFilter("card.setName", "Set name", null),
     new StringFilter("card.rarity", "Rarity", null),
     new StringFilter("card.type", "Type", null),
-    new StringFilter("card.colors", "Color", null),
-    new StringFilter("card.colorIdentity", "Color Identity (R, U, ...)", null)
+    new StringArrayFilter("card.colors", "Color", null),
+    new SelectFilter("card.layout", "Layout", new Map([["normal", "Normal"], ["aftermath", "Aftermath"]]), null),
   ];
   displays = DISPLAYS;
   display = "standard";
