@@ -6,6 +6,8 @@ import {MagicCard} from "./types/magic-card";
 @Injectable()
 export class MagicLibraryService {
   private _cards: Map<number, MagicOwnedCard> = new Map();
+  private _lastGenString: string = null;
+  private _hasChanged: boolean = true;
 
   constructor(private api: MagicApiService) {
     this.load();
@@ -52,6 +54,8 @@ export class MagicLibraryService {
     } else {
       throw new Error("This card is not in the deck !");
     }
+
+    this._hasChanged = true;
     this.save();
   }
 
@@ -76,22 +80,33 @@ export class MagicLibraryService {
     } else {
       this._cards.set(card.card.multiverseid, card);
     }
+
+    this._hasChanged = true;
   }
 
-  private save(): void {
+  private generateString(): void {
     const toStore: string[] = [];
 
     this._cards.forEach(card => {
       toStore.push(card.toString());
     });
 
-    localStorage.setItem("cards", toStore.join(";"));
+    this._lastGenString = toStore.join(";");
+    this._hasChanged = false;
   }
 
-  private load(): void {
-    const stored = localStorage.getItem("cards");
+  private toString(): string {
+    if (this._hasChanged) {
+      this.generateString();
+    }
+    return this._lastGenString;
+  }
 
-    console.log("Loading cards...");
+  private save(): void {
+    localStorage.setItem("cards", this.toString());
+  }
+
+  private loadString(stored: string): void {
     if (stored !== null) {
       let counter = 0;
       const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
@@ -120,5 +135,9 @@ export class MagicLibraryService {
         });
       }
     }
+  }
+
+  private load(): void {
+    this.loadString(localStorage.getItem("cards"));
   }
 }

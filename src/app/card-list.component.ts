@@ -4,8 +4,7 @@ import {MagicLibraryService} from "./magic-library.service";
 import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "./types/card-filter";
 import {DISPLAYS} from "./displays/list-display-components";
 import {
-  Comparator, NumberCriteria, SortCriteria, StringCriteria, StringNumberCriteria,
-  TypeCriteria
+  Comparator
 } from "./sort/sort";
 
 @Component({

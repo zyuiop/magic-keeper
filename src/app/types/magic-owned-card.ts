@@ -56,14 +56,32 @@ export class MagicReducedOwnedCard {
 
   static fromString(source: string): MagicReducedOwnedCard {
     const parts = source.split(":");
+    if (parts.length !== 2) {
+      throw new Error("Invalid source data " + source);
+    }
+
     const amts = parts[1].split(",");
+    if (amts.length !== 2) {
+      throw new Error("Invalid source data " + source);
+    }
+
+    if (isNaN(+amts[0]) || isNaN(+amts[0])) {
+      throw new Error("Invalid source data " + source);
+    }
 
     if (parts[0].slice(-1) === "+") {
+      if (isNaN(+parts[0].slice(0, -1))) {
+        throw new Error("Invalid source data " + source);
+      }
+
       const card = new MagicReducedOwnedCard(+parts[0].slice(0, -1), +amts[0], +amts[1]);
       card.double = true;
       return card;
     }
 
+    if (isNaN(+parts[0])) {
+      throw new Error("Invalid source data " + source);
+    }
     return new MagicReducedOwnedCard(+parts[0], +amts[0], +amts[1]);
   }
 }

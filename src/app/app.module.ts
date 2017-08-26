@@ -23,7 +23,8 @@ import {SortDisplayComponent} from "./parts/sort-display.component";
 @NgModule({
   declarations: [
     AppComponent, CardSearcherComponent, CardDisplayComponent, CardSummaryComponent, CardListComponent, ReplaceNl,
-    ReplaceMana, RarityPipe, FilterDisplayComponent, StandardDisplayComponent, GalleryDisplayComponent, InfoListDisplayComponent, SortDisplayComponent
+    ReplaceMana, RarityPipe, FilterDisplayComponent, StandardDisplayComponent, GalleryDisplayComponent,
+    InfoListDisplayComponent, SortDisplayComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpModule
