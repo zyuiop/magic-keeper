@@ -3,7 +3,7 @@ import {MagicCard} from "../types/magic-card";
 
 @Component({
   selector: 'app-card-summary',
-  templateUrl: 'card-summary.component.html'
+  templateUrl: './card-summary.component.html'
 })
 export class CardSummaryComponent {
   @Input() card: MagicCard;

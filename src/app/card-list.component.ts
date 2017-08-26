@@ -1,18 +1,30 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MagicOwnedCard} from "./types/magic-owned-card";
 import {MagicLibraryService} from "./magic-library.service";
 import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "./types/card-filter";
-import {DISPLAYS} from "./displays/list-display-components";
 import {
   Comparator
-} from "./sort/sort";
+} from "./types/sort";
 import {CardStorage} from "./card-storage";
+import {ActivatedRoute, ParamMap} from "@angular/router";
+import 'rxjs/add/operator/switchMap';
+
+class DisplayType {
+  key: string;
+  name: string;
+}
+
+const DISPLAYS: DisplayType[] = [
+  { key: "standard", name: "Classic"},
+  { key: "gallery", name: "Gallery"},
+  { key: "list", name: "List"}
+];
 
 @Component({
   templateUrl: './card-list.component.html',
   selector: 'app-card-list'
 })
-export class CardListComponent {
+export class CardListComponent implements OnInit {
   private _cards: Map<number, MagicOwnedCard>;
   private _comparator = new Comparator([]);
   filters: CardFilter<any>[] = [
@@ -29,8 +41,18 @@ export class CardListComponent {
   displays = DISPLAYS;
   display = "standard";
 
-  constructor(private lib: MagicLibraryService) {
+  constructor(private lib: MagicLibraryService,
+              private route: ActivatedRoute) {
     this._cards = lib.cards;
+  }
+
+  ngOnInit(): void {
+    this.route.paramMap
+      .subscribe((params: ParamMap) => {
+        if (params.has("display")) {
+          this.display = params.get("display");
+        }
+      });
   }
 
   get comparator(): Comparator {

@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {CardFilter, NumericFilter} from "../types/card-filter";
-import {Comparator, COMPARATORS, ReverseCriteria, SortCriteria} from "../sort/sort";
+import {Comparator, COMPARATORS, ReverseCriteria, SortCriteria} from "../types/sort";
 
 @Component({
   selector: 'app-sort-display',

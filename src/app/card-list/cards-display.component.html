@@ -1,0 +1,11 @@
+<div *ngIf="cards.length === 0" class="panel panel-danger">
+  <div class="panel-heading">No card found</div>
+  <div class="panel-body">
+    <p>There is no card in your collection matching these filters</p>
+  </div>
+</div>
+<div *ngIf="cards.length !== 0">
+  <app-info-list-display *ngIf="display === 'list'" [cards]="cards" [storage]="storage"></app-info-list-display>
+  <app-gallery-display *ngIf="display === 'gallery'" [cards]="cards" [storage]="storage"></app-gallery-display>
+  <app-standard-display *ngIf="display !== 'gallery' && display !== 'list'" [cards]="cards" [storage]="storage"></app-standard-display>
+</div>

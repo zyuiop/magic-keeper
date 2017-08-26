@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MagicSet} from "./types/magic-set";
 import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "./types/magic-card";
-import {MagicLibraryService} from "./magic-library.service";
+import {CardProvider} from "./card-provider";
+import {CardStorage} from "./card-storage";
 
 @Component({
   selector: 'app-card-searcher',
@@ -12,6 +13,8 @@ import {MagicLibraryService} from "./magic-library.service";
 export class CardSearcherComponent implements OnInit {
   @ViewChild('cardNumber') numberField;
   @ViewChild('cardAmount') cardAmount;
+  @Input() provider: CardProvider;
+  @Input() library: CardStorage;
 
   sets: MagicSet[];       // A list of sets, provisioned when the component is ready
   set: string;            // The set of the card
@@ -21,7 +24,9 @@ export class CardSearcherComponent implements OnInit {
   message: string;        // The message to display on the top
   currentCard: MagicCard; // The card found by the API (if any)
 
-  constructor(private api: MagicApiService, private library: MagicLibraryService) {}
+  constructor(private api: MagicApiService) {
+    this.provider = api; // for now at least
+  }
 
   ngOnInit(): void {
     this.api.getSets().then(res => {

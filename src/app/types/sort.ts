@@ -1,5 +1,5 @@
-import {MagicOwnedCard} from "../types/magic-owned-card";
-import {getInternalValue} from "../types/utils";
+import {MagicOwnedCard} from "./magic-owned-card";
+import {getInternalValue} from "./utils";
 
 export interface SortCriteria {
   compare(card1: MagicOwnedCard, card2: MagicOwnedCard): number;
