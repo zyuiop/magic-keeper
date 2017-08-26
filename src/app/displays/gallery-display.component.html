@@ -1,0 +1,26 @@
+<div *ngFor="let card of cards"  style="display: inline-block; margin: 1.5px" (click)="detailedCard = card">
+  <img src="{{card.card.imageUrl}}" *ngIf="detailedCard != card" style="display: inline-block">
+  <span *ngIf="detailedCard == card" style="width: 223px; height: 310.99px; border-radius: 10px; border: 2px solid; padding-left: 3px; vertical-align: middle; display: inline-block;">
+    <app-card-summary [card]="detailedCard.card" [reducedInfo]="true"></app-card-summary>
+    <p>
+      In stock :
+      <br/>
+      <b>{{card.amount}}</b> normal
+      <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
+        <b class="glyphicon glyphicon-minus"></b>
+      </button>
+      <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
+        <b class="glyphicon glyphicon-plus"></b>
+      </button>
+      <br/>
+      <b>{{card.amountFoil}}</b> foil
+      <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
+        <b class="glyphicon glyphicon-minus"></b>
+      </button>
+      <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
+        <b class="glyphicon glyphicon-plus"></b>
+      </button>
+    </p>
+  </span>
+</div>
+

@@ -1,7 +1,7 @@
 <h3>{{card.name}} <span [innerHtml]="card.manaCost | replacemana"></span>
   <small> <span class="label {{card.rarity | rarityLabel}}">{{card.rarity}}</span></small></h3>
 <p><b>{{card.type}}</b> <span *ngIf="card.power && card.toughness">| <b>{{card.power}} / {{card.toughness}}</b></span></p>
-<p *ngIf="card.text" [innerHtml]="card.text | replacenl | replacemana:'small'"></p>
-<p *ngIf="card.flavor" style="font-style: italic" [innerHtml]="card.flavor | replacenl"></p>
+<p *ngIf="!reducedInfo && card.text" [innerHtml]="card.text | replacenl | replacemana:'small'"></p>
+<p *ngIf="!reducedInfo && card.flavor" style="font-style: italic" [innerHtml]="card.flavor | replacenl"></p>
 <br>
 <p><em>{{card.setName}}</em> - n° {{card.number}}</p>

@@ -1,0 +1,36 @@
+<table class="table table-bordered">
+  <tr>
+    <th>Image</th>
+    <th>Description</th>
+    <th class="col-lg-2">Stock</th>
+  </tr>
+
+  <tr *ngFor="let card of cards">
+    <td>
+      <img src="{{card.card.imageUrl}}">
+    </td>
+
+    <td>
+      <app-card-summary [card]="card.card"></app-card-summary>
+    </td>
+
+    <td>In stock :
+      <br/>
+      <b>{{card.amount}}</b> normal
+      <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
+        <b class="glyphicon glyphicon-minus"></b>
+      </button>
+      <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
+        <b class="glyphicon glyphicon-plus"></b>
+      </button>
+      <br/>
+      <b>{{card.amountFoil}}</b> foil
+      <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
+        <b class="glyphicon glyphicon-minus"></b>
+      </button>
+      <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
+        <b class="glyphicon glyphicon-plus"></b>
+      </button>
+    </td>
+  </tr>
+</table>

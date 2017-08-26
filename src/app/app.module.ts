@@ -13,11 +13,16 @@ import {MagicLibraryService} from "./magic-library.service";
 import {CardSummaryComponent} from "./parts/card-summary.component";
 import {CardListComponent} from "./card-list.component";
 import {RarityPipe} from "./pipes/rarity.pipe";
+import {FilterDisplayComponent} from "./parts/filter-display.component";
+import {
+  GalleryDisplayComponent, InfoListDisplayComponent,
+  StandardDisplayComponent
+} from "./displays/list-display-components";
 
 @NgModule({
   declarations: [
     AppComponent, CardSearcherComponent, CardDisplayComponent, CardSummaryComponent, CardListComponent, ReplaceNl,
-    ReplaceMana, RarityPipe
+    ReplaceMana, RarityPipe, FilterDisplayComponent, StandardDisplayComponent, GalleryDisplayComponent, InfoListDisplayComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpModule

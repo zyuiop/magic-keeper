@@ -1,0 +1,37 @@
+<table class="table table-bordered">
+  <tr>
+    <th>Name</th>
+    <th>Cost</th>
+    <th>Type</th>
+    <th>P</th>
+    <th>T</th>
+    <th>Amt</th>
+    <td>Foil</td>
+  </tr>
+
+  <tr *ngFor="let card of cards">
+    <td>{{card.card.name}}</td>
+    <td><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span></td>
+    <td>{{card.card.type}}</td>
+    <td>{{card.card.power}}</td>
+    <td>{{card.card.toughness}}</td>
+    <td>
+      <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
+        <b class="glyphicon glyphicon-minus"></b>
+      </button>
+      <b>{{card.amount}}</b>
+      <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
+        <b class="glyphicon glyphicon-plus"></b>
+      </button>
+    </td>
+    <td>
+      <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
+        <b class="glyphicon glyphicon-minus"></b>
+      </button>
+      <b>{{card.amountFoil}}</b>
+      <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
+        <b class="glyphicon glyphicon-plus"></b>
+      </button>
+    </td>
+  </tr>
+</table>

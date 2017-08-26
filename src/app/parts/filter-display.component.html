@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <button *ngIf="display" (click)="display = false" class="btn btn-link"><b class="glyphicon glyphicon-chevron-down"></b></button>
+    <button *ngIf="!display" (click)="display = true" class="btn btn-link"><b class="glyphicon glyphicon-chevron-right"></b></button>
+    Filter</div>
+  <div class="panel-body" *ngIf="display">
+    <div class="form-horizontal">
+      <div class="form-group" *ngFor="let filter of filters">
+        <label class="col-sm-3 control-label">{{filter.displayName}}</label>
+        <div class="col-sm-1" *ngIf="isNumeric(filter)">
+          <select class="form-control" [(ngModel)]="numericFilter(filter).comparator">
+            <option value=">=">>=</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+            <option value="==">==</option>
+            <option value="!=">!=</option>
+          </select>
+        </div>
+        <div class="col-sm-6" *ngIf="isNumeric(filter)">
+          <input class="form-control" [(ngModel)]="filter.value" type="number">
+        </div>
+        <div class="col-sm-7" *ngIf="!isNumeric(filter)">
+          <input class="form-control" [(ngModel)]="filter.value">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

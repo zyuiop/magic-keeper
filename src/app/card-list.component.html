@@ -1,40 +1,14 @@
-<h1>Card List <small>(tracking <b>{{total}}</b> cards)</small></h1>
+<div class="row">
+  <h1 class="col-sm-9" style="display: inline-block;">Card List <small>(tracking <b>{{total}}</b> cards)</small></h1>
+  <div class="col-sm-3"><select class="form-control" style="display: inline-block;" [(ngModel)]="display">
+    <option *ngFor="let disp of displays" value="{{disp.key}}">{{disp.name}}</option>
+  </select></div>
+</div>
 
 <app-card-searcher></app-card-searcher>
 
-<table class="table table-bordered">
-  <tr>
-    <th>Image</th>
-    <th>Description</th>
-    <th class="col-lg-2">Stock</th>
-  </tr>
+<app-filter-display [filters]="filters"></app-filter-display>
 
-  <tr *ngFor="let card of cards">
-    <td>
-      <img src="{{card.card.imageUrl}}">
-    </td>
-
-    <td>
-      <app-card-summary [card]="card.card"></app-card-summary>
-    </td>
-
-    <td>In stock :
-      <br/>
-          <b>{{card.amount}}</b> normal
-          <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
-            <b class="glyphicon glyphicon-minus"></b>
-          </button>
-          <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
-            <b class="glyphicon glyphicon-plus"></b>
-          </button>
-      <br/>
-          <b>{{card.amountFoil}}</b> foil
-          <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
-            <b class="glyphicon glyphicon-minus"></b>
-          </button>
-          <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
-            <b class="glyphicon glyphicon-plus"></b>
-          </button>
-    </td>
-  </tr>
-</table>
+<app-info-list-display *ngIf="display === 'list'" [cards]="cards"></app-info-list-display>
+<app-gallery-display *ngIf="display === 'gallery'" [cards]="cards"></app-gallery-display>
+<app-standard-display *ngIf="display === 'standard'" [cards]="cards"></app-standard-display>

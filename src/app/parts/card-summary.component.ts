@@ -7,4 +7,5 @@ import {MagicCard} from "../types/magic-card";
 })
 export class CardSummaryComponent {
   @Input() card: MagicCard;
+  @Input() reducedInfo = false;
 }
