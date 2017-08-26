@@ -53,7 +53,7 @@ export class CardSearcherComponent implements OnInit {
     }
 
     this.library.addCard(this.currentCard, this.amount, this.amountFoil);
-    this.message = "Ajouté : " + this.amount + " et " + this.amountFoil + " foil de la carte <b>" + this.currentCard.name + "</b>";
+    this.message = "Added : " + this.amount + " and " + this.amountFoil + " of card <b>" + this.currentCard.name + "</b>";
     this.amount = null;
     this.amountFoil = null;
     this.currentCard = null;
