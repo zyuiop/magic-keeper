@@ -42,6 +42,11 @@ export class MagicApiService {
         const ret: Map<number, MagicOwnedCard> = new Map();
 
         for (const card of cards) {
+          if (card.names && card.names.length > 1 && card.name !== card.names[0]) {
+            continue; // double faced card : show the first face
+            // TODO : store other face in the card
+          }
+
           const stored = storedcards.get(card.multiverseid);
           ret.set(card.multiverseid, new MagicOwnedCard(card, stored.amount, stored.amountFoil));
         }

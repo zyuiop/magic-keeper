@@ -7,10 +7,10 @@ export class RarityPipe implements PipeTransform {
 
     switch (value) {
       case "Common":
-        labelClass = "label-success";
+        labelClass = "label-default";
         break;
       case "Uncommon":
-        labelClass = "label-default";
+        labelClass = "label-success";
         break;
       case "Rare":
         labelClass = "label-warning";

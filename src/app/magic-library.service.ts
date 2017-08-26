@@ -95,26 +95,29 @@ export class MagicLibraryService {
     if (stored !== null) {
       let counter = 0;
       const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
-      let stack: Map<number, MagicReducedOwnedCard> = new Map();
 
       while (storedCards.length > 0) {
+        const stack: Map<number, MagicReducedOwnedCard> = new Map();
+        let stackSize = 0;
         // add 100 cards in the "stack"
-        while (storedCards.length > 0 && stack.size < 100) {
+        while (storedCards.length > 0 && stackSize < 100) {
           const cur = storedCards.pop();
           stack.set(cur.cardId, cur);
+          stackSize++;
+          if (cur.double) {
+            stackSize++; // double cards
+          }
         }
 
         // process the "stack"
         const cid = ++counter;
-        console.log("Sending request " + cid + " with " + stack.size + " _cards");
+        console.log("Sending request " + cid + " with " + stack.size + " cards");
         console.log(stack);
         this.api.getCards(stack).then(res => {
-          console.log("Reply for request " + cid + " with " + res.size + " _cards");
+          console.log("Reply for request " + cid + " with " + res.size + " cards");
           console.log(res);
           this.merge(res);
         });
-
-        stack = new Map();
       }
     }
   }

@@ -38,7 +38,7 @@ export class MagicOwnedCard {
   }
 
   toString(): string {
-    return this.card.multiverseid + ":" + this._amount + "," + this._amountFoil;
+    return this.card.multiverseid + (this.card.layout !== "normal" ? "+" : "") + ":" + this._amount + "," + this._amountFoil;
   }
 }
 
@@ -46,6 +46,7 @@ export class MagicReducedOwnedCard {
   cardId: number; // gatherer id
   amount: number;
   amountFoil: number;
+  double = false;
 
   constructor(cardId: number, amount: number, amountFoil: number) {
     this.cardId = cardId;
@@ -56,6 +57,12 @@ export class MagicReducedOwnedCard {
   static fromString(source: string): MagicReducedOwnedCard {
     const parts = source.split(":");
     const amts = parts[1].split(",");
+
+    if (parts[0].slice(-1) === "+") {
+      const card = new MagicReducedOwnedCard(+parts[0].slice(0, -1), +amts[0], +amts[1]);
+      card.double = true;
+      return card;
+    }
 
     return new MagicReducedOwnedCard(+parts[0], +amts[0], +amts[1]);
   }
