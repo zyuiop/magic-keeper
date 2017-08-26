@@ -8,8 +8,9 @@ import {isNull, isUndefined} from "util";
 
 @Injectable()
 export class MagicApiService {
-  private cardsUrl = "https://api.magicthegathering.io/v1/cards";
-  private setsUrl = "https://api.magicthegathering.io/v1/sets";
+  private baseApiUrl = "https://api.magicthegathering.io/v1/";
+  private cardsUrl = this.baseApiUrl + "cards";
+  private setsUrl = this.baseApiUrl + "sets";
 
   constructor(private http: Http) {}
 
@@ -26,35 +27,11 @@ export class MagicApiService {
       .then(result => {
         const arr = result.json().cards as MagicCard[];
         if (arr.length >= 1) {
-          return arr[0]; // TODO : gérer les layout Aftermath (150a + 150b par exemple)
+          return arr[0];
         }
         return null;
       })
       .then(this.getMultisidedCard)
-      .catch(this.handleError);
-  }
-
-  private getMultisidedCard(card: MagicCard): Promise<MagicCard> {
-    if (!card.names || card.names.length <= 1) {
-      return Promise.resolve(card);
-    }
-
-    const multiverseId = card.multiverseid;
-    return this.http.get(this.cardsUrl + "?multiverseid=" + multiverseId)
-      .toPromise()
-      .then(result => {
-        const arr = result.json().cards as MagicCard[];
-        if (isUndefined(arr) || isNull(arr) || arr.length < 1) {
-          return null;
-        }
-
-        if (arr.length === 1) {
-          return arr[0];
-        }
-
-        arr[0].otherSide = arr[1]; // fuck it !
-        return arr[0];
-      })
       .catch(this.handleError);
   }
 
@@ -88,6 +65,30 @@ export class MagicApiService {
         }
 
         return ret;
+      })
+      .catch(this.handleError);
+  }
+
+  private getMultisidedCard(card: MagicCard): Promise<MagicCard> {
+    if (!card.names || card.names.length <= 1) {
+      return Promise.resolve(card);
+    }
+
+    const multiverseId = card.multiverseid;
+    return this.http.get(this.cardsUrl + "?multiverseid=" + multiverseId)
+      .toPromise()
+      .then(result => {
+        const arr = result.json().cards as MagicCard[];
+        if (isUndefined(arr) || isNull(arr) || arr.length < 1) {
+          return null;
+        }
+
+        if (arr.length === 1) {
+          return arr[0];
+        }
+
+        arr[0].otherSide = arr[1]; // fuck it !
+        return arr[0];
       })
       .catch(this.handleError);
   }

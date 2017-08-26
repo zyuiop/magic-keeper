@@ -13,6 +13,7 @@ import {
 })
 export class CardListComponent {
   private _cards: Map<number, MagicOwnedCard>;
+  private _comparator = new Comparator([]);
   filters: CardFilter<any>[] = [
     new NumericFilter("amount", "Cards amount", 0),
     new NumericFilter("amountFoil", "Foil cards amount", 0),
@@ -26,7 +27,6 @@ export class CardListComponent {
   ];
   displays = DISPLAYS;
   display = "standard";
-  private _comparator = new Comparator([]);
 
   constructor(private lib: MagicLibraryService) {
     this._cards = lib.cards;
@@ -37,8 +37,6 @@ export class CardListComponent {
   }
 
   get cards(): MagicOwnedCard[] {
-    // TODO optimise : we have to sort all this shit all the time !
-    // filter
     const cards = Array.from(this._cards.values());
     return cards
       .filter(card => {

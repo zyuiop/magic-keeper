@@ -13,16 +13,15 @@ export class CardSearcherComponent implements OnInit {
   @ViewChild('cardNumber') numberField;
   @ViewChild('cardAmount') cardAmount;
 
-  sets: MagicSet[];
-  set: string;
-  number: string;
-  amount: number;
-  amountFoil: number;
-  message: string;
-  currentCard: MagicCard;
+  sets: MagicSet[];       // A list of sets, provisioned when the component is ready
+  set: string;            // The set of the card
+  number: string;         // The number of the card
+  amount: number;         // The amount
+  amountFoil: number;     // The amount in foil cards
+  message: string;        // The message to display on the top
+  currentCard: MagicCard; // The card found by the API (if any)
 
-  constructor(private api: MagicApiService, private library: MagicLibraryService) {
-  }
+  constructor(private api: MagicApiService, private library: MagicLibraryService) {}
 
   ngOnInit(): void {
     this.api.getSets().then(res => {

@@ -19,7 +19,15 @@
 
     <br />
 
-    <app-card-display [card]="currentCard"></app-card-display>
+    <div *ngIf="currentCard" class="row">
+      <div class="col-md-3">
+        <img src="{{currentCard.imageUrl}}">
+      </div>
+
+      <div class="col-md-9">
+        <app-card-summary [card]="currentCard"></app-card-summary>
+      </div>
+    </div>
   </div>
 </div>
 
