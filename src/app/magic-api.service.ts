@@ -21,8 +21,8 @@ export class MagicApiService {
       .toPromise()
       .then(result => {
         const arr = result.json().cards as MagicCard[];
-        if (arr.length === 1) {
-          return arr[0];
+        if (arr.length >= 1) {
+          return arr[0]; // TODO : gérer les layout Aftermath (150a + 150b par exemple)
         }
         return null;
       })

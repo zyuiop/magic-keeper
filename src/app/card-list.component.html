@@ -16,12 +16,11 @@
 
     <td>
       <app-card-summary [card]="card.card"></app-card-summary>
-      <p>{{card.card.types[0]}} {{card.card.cmc}} {{card.card.number}}</p>
     </td>
 
-    <td>En votre possession :
+    <td>In stock :
       <br/>
-          <b>{{card.amount}}</b> normale(s)
+          <b>{{card.amount}}</b> normal
           <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
             <b class="glyphicon glyphicon-minus"></b>
           </button>

@@ -12,6 +12,7 @@ export class MagicCard {
   subtypes: string[];
   rarity: string[];
   set: string;
+  setName: string;
   text: string;
   // artist
   number: string;

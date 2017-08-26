@@ -11,12 +11,13 @@ import {ReplaceNl} from "./pipes/replacenl.pipe";
 import {ReplaceMana} from "./pipes/replacemana.pipe";
 import {MagicLibraryService} from "./magic-library.service";
 import {CardSummaryComponent} from "./parts/card-summary.component";
-import {OwnedCardDisplayComponent} from "./parts/owned-card-display.component";
 import {CardListComponent} from "./card-list.component";
+import {RarityPipe} from "./pipes/rarity.pipe";
 
 @NgModule({
   declarations: [
-    AppComponent, CardSearcherComponent, CardDisplayComponent, CardSummaryComponent, OwnedCardDisplayComponent, CardListComponent, ReplaceNl, ReplaceMana
+    AppComponent, CardSearcherComponent, CardDisplayComponent, CardSummaryComponent, CardListComponent, ReplaceNl,
+    ReplaceMana, RarityPipe
   ],
   imports: [
     BrowserModule, FormsModule, HttpModule
