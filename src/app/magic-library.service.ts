@@ -79,23 +79,22 @@ export class MagicLibraryService {
   }
 
   private save(): void {
-    const toStore: MagicReducedOwnedCard[] = [];
+    const toStore: string[] = [];
 
     this._cards.forEach(card => {
-      toStore.push(new MagicReducedOwnedCard(card));
+      toStore.push(card.toString());
     });
 
-    localStorage.setItem("cards", JSON.stringify(toStore));
+    localStorage.setItem("cards", toStore.join(";"));
   }
 
   private load(): void {
     const stored = localStorage.getItem("cards");
 
     console.log("Loading cards...");
-
     if (stored !== null) {
       let counter = 0;
-      const storedCards = JSON.parse(stored) as MagicReducedOwnedCard[];
+      const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
       let stack: Map<number, MagicReducedOwnedCard> = new Map();
 
       while (storedCards.length > 0) {

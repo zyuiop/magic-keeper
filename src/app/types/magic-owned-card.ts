@@ -36,6 +36,10 @@ export class MagicOwnedCard {
     this._amount = Math.max(0, amount);
     this._amountFoil = Math.max(0, amountFoil);
   }
+
+  toString(): string {
+    return this.card.multiverseid + ":" + this._amount + "," + this._amountFoil;
+  }
 }
 
 export class MagicReducedOwnedCard {
@@ -43,9 +47,16 @@ export class MagicReducedOwnedCard {
   amount: number;
   amountFoil: number;
 
-  constructor(oc: MagicOwnedCard) {
-    this.cardId = oc.card.multiverseid;
-    this.amount = Math.max(oc.amount);
-    this.amountFoil = Math.max(oc.amountFoil);
+  constructor(cardId: number, amount: number, amountFoil: number) {
+    this.cardId = cardId;
+    this.amount = amount;
+    this.amountFoil = amountFoil;
+  }
+
+  static fromString(source: string): MagicReducedOwnedCard {
+    const parts = source.split(":");
+    const amts = parts[1].split(",");
+
+    return new MagicReducedOwnedCard(+parts[0], +amts[0], +amts[1]);
   }
 }
