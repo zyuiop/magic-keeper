@@ -16,22 +16,10 @@
     <td>{{card.card.power}}</td>
     <td>{{card.card.toughness}}</td>
     <td>
-      <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
-        <b class="glyphicon glyphicon-minus"></b>
-      </button>
-      <b>{{card.amount}}</b>
-      <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
-        <b class="glyphicon glyphicon-plus"></b>
-      </button>
+      <app-card-qty-display [card]="card" [foil]="false" [storage]="storage"></app-card-qty-display>
     </td>
     <td>
-      <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
-        <b class="glyphicon glyphicon-minus"></b>
-      </button>
-      <b>{{card.amountFoil}}</b>
-      <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
-        <b class="glyphicon glyphicon-plus"></b>
-      </button>
+      <app-card-qty-display [card]="card" [foil]="true" [storage]="storage"></app-card-qty-display>
     </td>
   </tr>
 </table>

@@ -17,7 +17,7 @@
     </div>
 </div>
 <div *ngIf="cards.length !== 0">
-  <app-info-list-display *ngIf="display === 'list'" [cards]="cards"></app-info-list-display>
-  <app-gallery-display *ngIf="display === 'gallery'" [cards]="cards"></app-gallery-display>
-  <app-standard-display *ngIf="display === 'standard'" [cards]="cards"></app-standard-display>
+  <app-info-list-display *ngIf="display === 'list'" [cards]="cards" [storage]="storage"></app-info-list-display>
+  <app-gallery-display *ngIf="display === 'gallery'" [cards]="cards" [storage]="storage"></app-gallery-display>
+  <app-standard-display *ngIf="display === 'standard'" [cards]="cards" [storage]="storage"></app-standard-display>
 </div>

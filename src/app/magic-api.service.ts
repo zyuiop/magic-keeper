@@ -5,9 +5,10 @@ import 'rxjs/add/operator/toPromise';
 import {MagicCard} from "./types/magic-card";
 import {MagicOwnedCard, MagicReducedOwnedCard} from "./types/magic-owned-card";
 import {isNull, isUndefined} from "util";
+import {CardProvider} from "./card-provider";
 
 @Injectable()
-export class MagicApiService {
+export class MagicApiService implements CardProvider {
   private baseApiUrl = "https://api.magicthegathering.io/v1/";
   private cardsUrl = this.baseApiUrl + "cards";
   private setsUrl = this.baseApiUrl + "sets";

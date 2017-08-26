@@ -2,12 +2,13 @@ import {Injectable} from '@angular/core';
 import {MagicOwnedCard, MagicReducedOwnedCard} from "./types/magic-owned-card";
 import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "./types/magic-card";
+import {CardStorage} from "./card-storage";
 
 @Injectable()
-export class MagicLibraryService {
+export class MagicLibraryService implements CardStorage {
   private _cards: Map<number, MagicOwnedCard> = new Map();
   private _lastGenString: string = null;
-  private _hasChanged: boolean = true;
+  private _hasChanged = true;
 
   constructor(private api: MagicApiService) {
     this.load();
@@ -139,5 +140,10 @@ export class MagicLibraryService {
 
   private load(): void {
     this.loadString(localStorage.getItem("cards"));
+  }
+
+
+  allowUpdate(): boolean {
+    return true; // local storage can always be written
   }
 }

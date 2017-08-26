@@ -6,6 +6,7 @@ import {DISPLAYS} from "./displays/list-display-components";
 import {
   Comparator
 } from "./sort/sort";
+import {CardStorage} from "./card-storage";
 
 @Component({
   templateUrl: './card-list.component.html',
@@ -54,5 +55,9 @@ export class CardListComponent {
     let total = 0;
     this._cards.forEach(value => total += value.totalAmount());
     return total;
+  }
+
+  get storage(): CardStorage {
+    return this.lib;
   }
 }

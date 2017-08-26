@@ -14,6 +14,7 @@ import {CardListComponent} from "./card-list.component";
 import {RarityPipe} from "./pipes/rarity-label.pipe";
 import {FilterDisplayComponent} from "./parts/filter-display.component";
 import {
+  CardQtyDisplayComponent,
   GalleryDisplayComponent, InfoListDisplayComponent,
   StandardDisplayComponent
 } from "./displays/list-display-components";
@@ -23,7 +24,7 @@ import {SortDisplayComponent} from "./parts/sort-display.component";
   declarations: [
     AppComponent, CardSearcherComponent, CardSummaryComponent, CardListComponent, ReplaceNl,
     ReplaceMana, RarityPipe, FilterDisplayComponent, StandardDisplayComponent, GalleryDisplayComponent,
-    InfoListDisplayComponent, SortDisplayComponent
+    InfoListDisplayComponent, SortDisplayComponent, CardQtyDisplayComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpModule

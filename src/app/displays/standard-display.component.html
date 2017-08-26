@@ -16,21 +16,9 @@
 
     <td>In stock :
       <br/>
-      <b>{{card.amount}}</b> normal
-      <button *ngIf="card.amount > 0" (click)="update(card, false, true)" class="btn btn-danger btn-xs">
-        <b class="glyphicon glyphicon-minus"></b>
-      </button>
-      <button (click)="update(card, false, false)" class="btn btn-success btn-xs">
-        <b class="glyphicon glyphicon-plus"></b>
-      </button>
+      <b>Normal :</b> <app-card-qty-display [card]="card" [foil]="false" [storage]="storage"></app-card-qty-display>
       <br/>
-      <b>{{card.amountFoil}}</b> foil
-      <button *ngIf="card.amountFoil > 0" (click)="update(card, true, true)" class="btn btn-danger btn-xs">
-        <b class="glyphicon glyphicon-minus"></b>
-      </button>
-      <button (click)="update(card, true, false)" class="btn btn-success btn-xs">
-        <b class="glyphicon glyphicon-plus"></b>
-      </button>
+      <b>Foil :</b> <app-card-qty-display [card]="card" [foil]="true" [storage]="storage"></app-card-qty-display>
     </td>
   </tr>
 </table>

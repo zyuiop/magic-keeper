@@ -1,17 +1,33 @@
 import {MagicLibraryService} from "../magic-library.service";
 import {MagicOwnedCard} from "../types/magic-owned-card";
 import {Component, Input} from "@angular/core";
+import {CardStorage} from "../card-storage";
 
 abstract class AbstractDisplayComponent {
   @Input() cards: MagicOwnedCard[];
-  constructor(private lib: MagicLibraryService) {}
+  @Input() storage: CardStorage;
 
-  update(card: MagicOwnedCard, foil: boolean, remove: boolean) {
+}
+
+@Component({
+  selector: 'app-card-qty-display',
+  templateUrl: './card-qty-display.component.html'
+})
+export class CardQtyDisplayComponent extends AbstractDisplayComponent {
+  @Input() card: MagicOwnedCard;
+  @Input() storage: CardStorage;
+  @Input() foil: boolean;
+
+  update(remove: boolean) {
     if (remove) {
-      this.lib.removeCard(card.card, foil ? 0 : 1, foil ? 1 : 0);
+      this.storage.removeCard(this.card.card, this.foil ? 0 : 1, this.foil ? 1 : 0);
     } else {
-      this.lib.addCard(card.card, foil ? 0 : 1, foil ? 1 : 0);
+      this.storage.addCard(this.card.card, this.foil ? 0 : 1, this.foil ? 1 : 0);
     }
+  }
+
+  get amount(): number {
+    return this.foil ? this.card.amountFoil : this.card.amount;
   }
 }
 
@@ -21,10 +37,6 @@ abstract class AbstractDisplayComponent {
 })
 export class GalleryDisplayComponent extends AbstractDisplayComponent {
   detailedCard: MagicOwnedCard;
-
-  constructor(lib: MagicLibraryService) {
-    super(lib);
-  }
 }
 
 @Component({
@@ -32,9 +44,6 @@ export class GalleryDisplayComponent extends AbstractDisplayComponent {
   templateUrl: './info-list-display.component.html'
 })
 export class InfoListDisplayComponent extends AbstractDisplayComponent {
-  constructor(lib: MagicLibraryService) {
-    super(lib);
-  }
 }
 
 @Component({
@@ -42,9 +51,6 @@ export class InfoListDisplayComponent extends AbstractDisplayComponent {
   templateUrl: './standard-display.component.html'
 })
 export class StandardDisplayComponent extends AbstractDisplayComponent {
-  constructor(lib: MagicLibraryService) {
-    super(lib);
-  }
 }
 
 export class DisplayType {
