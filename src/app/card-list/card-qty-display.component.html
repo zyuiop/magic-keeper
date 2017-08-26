@@ -1,7 +1,7 @@
-<button *ngIf="amount > 0 && storage.allowUpdate()" (click)="update(card, true)" class="btn btn-danger btn-xs">
+<button *ngIf="amount > 0 && storage.allowUpdate()" (click)="update(true)" class="btn btn-danger btn-xs">
   <b class="glyphicon glyphicon-minus"></b>
 </button>
 <b>{{amount}}</b>
-<button *ngIf="storage.allowUpdate()" (click)="update(card, false)" class="btn btn-success btn-xs">
+<button *ngIf="storage.allowUpdate()" (click)="update(false)" class="btn btn-success btn-xs">
   <b class="glyphicon glyphicon-plus"></b>
 </button>

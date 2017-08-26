@@ -19,14 +19,14 @@ export class MagicOwnedCard {
 
   increase(amt: number): void {
     if (this._amount + amt < 0) {
-      throw new Error("Cannot assign negative value");
+      throw new Error("Cannot assign negative value (current : " + this._amount + ", added : " + amt + ")");
     }
     this._amount += amt;
   }
 
   increaseFoil(amt: number): void {
     if (this._amountFoil + amt < 0) {
-      throw new Error("Cannot assign negative value");
+      throw new Error("Cannot assign negative foil value (current : " + this._amountFoil + ", added : " + amt + ")");
     }
     this._amountFoil += amt;
   }
