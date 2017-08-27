@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 import {MagicApiService} from "./magic-api.service";
 import {CardSearcherComponent} from "./card-searcher.component";
 import {HttpModule} from "@angular/http";
-import {MagicLibraryService} from "./magic-library.service";
-import {CardListComponent} from "./card-list.component";
+import {LocalCollectionService} from "./local-collection.service";
+import {CollectionComponent} from "./collection.component";
 import {FilterDisplayComponent} from "./parts/filter-display.component";
 import {SortDisplayComponent} from "./parts/sort-display.component";
 import {CardListModule} from "./card-list/card-list.module";
@@ -17,7 +17,7 @@ import {AppRoutingModule} from "./app-routing.module";
   declarations: [
     AppComponent,
     CardSearcherComponent,
-    CardListComponent,
+    CollectionComponent,
     FilterDisplayComponent,
     SortDisplayComponent,
   ],
@@ -30,7 +30,7 @@ import {AppRoutingModule} from "./app-routing.module";
   ],
   providers: [
     MagicApiService,
-    MagicLibraryService
+    LocalCollectionService
   ],
   bootstrap: [AppComponent]
 })

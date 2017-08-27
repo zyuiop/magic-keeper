@@ -3,9 +3,10 @@ import {MagicOwnedCard, MagicReducedOwnedCard} from "./types/magic-owned-card";
 import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "./types/magic-card";
 import {CardStorage} from "./card-storage";
+import {CardProvider} from "./card-provider";
 
 @Injectable()
-export class MagicLibraryService implements CardStorage {
+export class LocalCollectionService implements CardStorage, CardProvider {
   private _cards: Map<number, MagicOwnedCard> = new Map();
   private _lastGenString: string = null;
   private _hasChanged = true;
@@ -32,9 +33,12 @@ export class MagicLibraryService implements CardStorage {
     this.save();
   }
 
-
   get cards(): Map<number, MagicOwnedCard> {
     return this._cards;
+  }
+
+  getCards(): MagicOwnedCard[] {
+    return Array.from(this._cards.values());
   }
 
   removeCard(card: MagicCard, amount: number, amountFoil: number) {
@@ -142,6 +146,10 @@ export class MagicLibraryService implements CardStorage {
     this.loadString(localStorage.getItem("cards"));
   }
 
+  searchCard(set: string, number: string): Promise<MagicCard> {
+    const corresp = Array.from(this._cards.values()).filter(c => c.card.set === set && c.card.number.toLowerCase() === number.toLowerCase());
+    return Promise.resolve((corresp && corresp.length > 0 ? corresp[0].card : null));
+  }
 
   allowUpdate(): boolean {
     return true; // local storage can always be written

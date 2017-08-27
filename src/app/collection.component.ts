@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MagicOwnedCard} from "./types/magic-owned-card";
-import {MagicLibraryService} from "./magic-library.service";
+import {LocalCollectionService} from "./local-collection.service";
 import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "./types/card-filter";
 import {
   Comparator
@@ -21,11 +21,10 @@ const DISPLAYS: DisplayType[] = [
 ];
 
 @Component({
-  templateUrl: './card-list.component.html',
-  selector: 'app-card-list'
+  templateUrl: './collection.component.html',
+  selector: 'app-collection'
 })
-export class CardListComponent implements OnInit {
-  private _cards: Map<number, MagicOwnedCard>;
+export class CollectionComponent implements OnInit {
   private _comparator = new Comparator([]);
   filters: CardFilter<any>[] = [
     new NumericFilter("amount", "Cards amount", 0),
@@ -41,10 +40,8 @@ export class CardListComponent implements OnInit {
   displays = DISPLAYS;
   display = "standard";
 
-  constructor(private lib: MagicLibraryService,
-              private route: ActivatedRoute) {
-    this._cards = lib.cards;
-  }
+  constructor(private lib: LocalCollectionService,
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.paramMap
@@ -60,7 +57,7 @@ export class CardListComponent implements OnInit {
   }
 
   get cards(): MagicOwnedCard[] {
-    const cards = Array.from(this._cards.values());
+    const cards = this.lib.getCards();
     return cards
       .filter(card => {
         for (const filter of this.filters) {
@@ -75,7 +72,9 @@ export class CardListComponent implements OnInit {
 
   get total(): number {
     let total = 0;
-    this._cards.forEach(value => total += value.totalAmount());
+    for (const obj of this.lib.getCards()) {
+      total += (obj as MagicOwnedCard).totalAmount();
+    }
     return total;
   }
 

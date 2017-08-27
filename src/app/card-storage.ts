@@ -1,4 +1,5 @@
 import {MagicCard} from "./types/magic-card";
+import {MagicOwnedCard} from "./types/magic-owned-card";
 
 /**
  * Represents something that saves cards, either an API, a card list, a deck, a collection, a deck side, ...
@@ -26,4 +27,11 @@ export interface CardStorage {
    * @returns {boolean}
    */
   allowUpdate(): boolean;
+
+  /**
+   * Get all the cards
+   * @returns {MagicOwnedCard[]} an instant value of the cardlist owned. This list may not be complete as data may still
+   * be downloading from the net.
+   */
+  getCards(): MagicOwnedCard[];
 }

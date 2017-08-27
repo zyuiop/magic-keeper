@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {CardListComponent} from "./card-list.component";
+import {CollectionComponent} from "./collection.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/collection', pathMatch: 'full' },
   { path: '**', redirectTo: '/collection', pathMatch: 'full' },
-  { path: 'collection',  component: CardListComponent },
-  { path: 'collection/:display', component: CardListComponent },
+  { path: 'collection',  component: CollectionComponent },
+  { path: 'collection/:display', component: CollectionComponent },
 ];
 
 @NgModule({
