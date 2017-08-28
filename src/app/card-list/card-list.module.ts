@@ -10,6 +10,8 @@ import {ReplaceNl} from "./replacenl.pipe";
 import {ReplaceMana} from "./replacemana.pipe";
 import {RarityPipe} from "./rarity-label.pipe";
 import {CardsDisplayComponent} from "./cards-display.component";
+import {SortDisplayComponent} from "./sort-display.component";
+import {FilterDisplayComponent} from "./filter-display.component";
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import {CardsDisplayComponent} from "./cards-display.component";
     ReplaceNl,
     ReplaceMana,
     RarityPipe,
+    FilterDisplayComponent,
+    SortDisplayComponent,
   ],
   imports: [
     BrowserModule, FormsModule

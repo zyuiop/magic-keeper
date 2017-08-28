@@ -3,6 +3,8 @@ import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
 import "rxjs/add/operator/toPromise";
+import {BackendService} from "../backend.service";
+import {Location} from "@angular/common";
 
 
 @Injectable()
@@ -16,7 +18,7 @@ export class AuthService {
     scope: 'openid profile'
   });
 
-  constructor(public router: Router) {}
+  constructor(public router: Router, private location: Location, private backend: BackendService) {}
 
   public login(): void {
     this.auth0.authorize();
@@ -27,13 +29,28 @@ export class AuthService {
       if (authResult && authResult.accessToken) {
         window.location.hash = '';
         this.setSession(authResult);
-        this.router.navigate(['/']);
+        this.checkProfile(true);
       } else if (err) {
-        this.router.navigate(['/']);
+        this.router.navigate(['/my']);
         console.log(err);
         alert(`Authentication error: ${err.error}`);
-      } else if (!authResult && this.router.url.indexOf("callback") !== -1) {
-        // this.router.navigate(['/']); // Callback but no hash
+      } else if (this.isAuthenticated()) {
+        this.checkProfile(this.location.path().indexOf('callback') !== -1);
+      } else if (this.location.path().indexOf('callback') !== -1) {
+        this.router.navigate(['/my']);
+      }
+    });
+  }
+
+  private checkProfile(redirect: boolean): void {
+    this.backend.getOwnProfile().then(profile => {
+      if (profile === null) {
+        this.router.navigate(['/pickUsername']);
+      } else {
+        localStorage.setItem('username', profile.username);
+        if (redirect) {
+          this.router.navigate(['/my']);
+        }
       }
     });
   }

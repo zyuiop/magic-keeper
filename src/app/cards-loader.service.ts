@@ -4,6 +4,33 @@ import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "./types/magic-card";
 import {CardStorage} from "./card-storage";
 import {CardProvider} from "./card-provider";
+import {Observable} from "rxjs/Observable";
+
+export interface PartialData<T> {
+  getData(): T;
+  isComplete(): boolean;
+}
+
+class PartialDataImpl<T> implements PartialData<T> {
+  private _finished: boolean;
+  private _data: T;
+
+  constructor(_data: T) {
+    this._data = _data;
+  }
+
+  getData(): T {
+    return this._data;
+  }
+
+  isComplete(): boolean {
+    return this._finished;
+  }
+
+  finish(): void {
+    this._finished = true;
+  }
+}
 
 @Injectable()
 export class CardsLoaderService {
@@ -25,8 +52,11 @@ export class CardsLoaderService {
     });
   }
 
-  loadString(stored: string): Map<number, MagicOwnedCard> {
+  loadString(stored: string): PartialData<Map<number, MagicOwnedCard>> {
     const map: Map<number, MagicOwnedCard> = new Map();
+    const partial = new PartialDataImpl(map);
+    let todo = 0;
+
     if (stored !== null) {
       let counter = 0;
       const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
@@ -46,16 +76,27 @@ export class CardsLoaderService {
 
         // process the "stack"
         const cid = ++counter;
+        todo++;
+
         console.log("Sending request " + cid + " with " + stack.size + " cards");
         console.log(stack);
         this.api.getCards(stack).then(res => {
           console.log("Reply for request " + cid + " with " + res.size + " cards");
           console.log(res);
           this.merge(map, res);
+          if (--todo === 0) {
+            partial.finish();
+          }
         });
       }
+
+      if (counter === 0) {
+        partial.finish();
+      }
+    } else {
+      partial.finish();
     }
 
-    return map;
+    return partial;
   }
 }

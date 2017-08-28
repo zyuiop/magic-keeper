@@ -4,11 +4,11 @@ import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "./types/magic-card";
 import {CardStorage} from "./card-storage";
 import {CardProvider} from "./card-provider";
-import {CardsLoaderService} from "./cards-loader.service";
+import {CardsLoaderService, PartialData} from "./cards-loader.service";
 import {BackendService} from "./backend.service";
 
-class OnlineCardStorage implements CardStorage {
-  constructor(private cards: Map<number, MagicOwnedCard>) {};
+export class OnlineCardStorage implements CardStorage {
+  constructor(private cards: PartialData<Map<number, MagicOwnedCard>>, private _username: string) {};
 
   addCard(card: MagicCard, amount: number, amountFoil: number): void {
     throw new Error("Method not implemented.");
@@ -23,7 +23,15 @@ class OnlineCardStorage implements CardStorage {
   }
 
   getCards(): MagicOwnedCard[] {
-    return Array.from(this.cards.values());
+    return Array.from(this.cards.getData().values());
+  }
+
+  get username(): string {
+    return this._username;
+  }
+
+  finishedLoading(): boolean {
+    return this.cards.isComplete();
   }
 }
 
@@ -32,10 +40,10 @@ export class OnlineCollectionService {
   constructor(private loader: CardsLoaderService, private backend: BackendService) {
   }
 
-  getCards(url: string): Promise<CardStorage> {
+  getCards(url: string): Promise<OnlineCardStorage> {
     return this.backend.getCollection(url).then(collection => {
       if (collection.public) {
-        return new OnlineCardStorage(this.loader.loadString(collection.userCollection));
+        return new OnlineCardStorage(this.loader.loadString(collection.userCollection), collection.username);
       } else {
         throw new NotPublicCollectionError();
       }

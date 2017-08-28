@@ -1,0 +1,64 @@
+<div class="modal fade" tabindex="-1" role="dialog" id="loadModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Warning: Load from cloud</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to load your collection from the cloud? Your local collection will be <b>completely
+        overwritten</b> and replaced by the downloaded collection.</p>
+        <p><b>This operation cannot be undone</b></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="loadCollection()">I understand, load</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default" *ngIf="auth.isAuthenticated()">
+  <div class="panel-heading">
+    <button *ngIf="display" (click)="display = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
+    <button *ngIf="!display" (click)="display = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
+    Cloud Saving</div>
+  <div class="panel-body" *ngIf="display && hasName">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-lg-3">Save your collection in the cloud: </label>
+          <div class="col-lg-3">
+            <button (click)="updateCollection()" class="btn btn-success col-lg-12">Save Collection</button>
+          </div>
+          <span *ngIf="sending" class="help-block">Saving... <img src="assets/loading.svg" height="12px" width="12px" /> </span>
+          <span *ngIf="sent" class="help-block">Saved! <b class="glyphicon glyphicon-ok"></b></span>
+        </div>
+
+        <div class="form-group" *ngIf="collection">
+          <label class="control-label col-lg-3">Set privacy status: </label>
+          <div class="col-lg-3">
+            <select class="form-control" [(ngModel)]="collection.public" (change)="updatePrivacy()" id="set-selector">
+              <option [ngValue]="true">Public</option>
+              <option [ngValue]="false">Private</option>
+            </select>
+          </div>
+          <span *ngIf="sendingPrivacy" class="help-block">Updating... <img src="assets/loading.svg" height="12px" width="12px" /> </span>
+          <span *ngIf="!sendingPrivacy && collection.public" class="help-block">Your collection can be seen here: <b>https://magic.zyuiop.net/collection/{{name}}</b></span>
+          <span *ngIf="!sendingPrivacy && !collection.public" class="help-block">Your collection is not public.</span>
+        </div>
+
+        <div class="form-group" *ngIf="collection">
+          <label class="control-label col-lg-3">Load your collection from the cloud: </label>
+          <div class="col-lg-3">
+            <button data-toggle="modal" data-target="#loadModal" class="btn btn-danger col-lg-12">Load Collection</button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="panel-body" *ngIf="display && !hasName">
+    <h2>The cloud service is not available</h2>
+    <p>To enable the cloud service, you must complete your registration by <a routerLink="pickUsername">picking a username</a>.</p>
+  </div>
+</div>
+

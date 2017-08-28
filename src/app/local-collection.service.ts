@@ -3,7 +3,7 @@ import {MagicOwnedCard} from "./types/magic-owned-card";
 import {MagicCard} from "./types/magic-card";
 import {CardStorage} from "./card-storage";
 import {CardProvider} from "./card-provider";
-import {CardsLoaderService} from "./cards-loader.service";
+import {CardsLoaderService, PartialData} from "./cards-loader.service";
 
 @Injectable()
 export class LocalCollectionService {
@@ -19,7 +19,7 @@ export class LocalCollectionService {
 }
 
 class LocalStorage implements CardStorage, CardProvider {
-  constructor(private _cards: Map<number, MagicOwnedCard>) {}
+  constructor(private _cards: PartialData<Map<number, MagicOwnedCard>>) {}
 
   /**
    * Add a given card to the library, in a given quantity
@@ -40,11 +40,11 @@ class LocalStorage implements CardStorage, CardProvider {
   }
 
   get cards(): Map<number, MagicOwnedCard> {
-    return this._cards;
+    return this._cards.getData();
   }
 
   getCards(): MagicOwnedCard[] {
-    return Array.from(this._cards.values());
+    return Array.from(this.cards.values());
   }
 
   removeCard(card: MagicCard, amount: number, amountFoil: number) {
@@ -55,12 +55,12 @@ class LocalStorage implements CardStorage, CardProvider {
       throw new Error("Tried to remove invalid card");
     }
 
-    if (this._cards.has(card.multiverseid)) {
-      this._cards.get(card.multiverseid).increaseFoil(- amountFoil);
-      this._cards.get(card.multiverseid).increase(- amount);
+    if (this.cards.has(card.multiverseid)) {
+      this.cards.get(card.multiverseid).increaseFoil(- amountFoil);
+      this.cards.get(card.multiverseid).increase(- amount);
 
-      if (this._cards.get(card.multiverseid).totalAmount() <= 0) {
-        this._cards.delete(card.multiverseid);
+      if (this.cards.get(card.multiverseid).totalAmount() <= 0) {
+        this.cards.delete(card.multiverseid);
       }
     } else {
       throw new Error("This card is not in the deck !");
@@ -73,18 +73,18 @@ class LocalStorage implements CardStorage, CardProvider {
       return;
     }
 
-    if (this._cards.has(card.card.multiverseid)) {
-      this._cards.get(card.card.multiverseid).increaseFoil(card.amountFoil);
-      this._cards.get(card.card.multiverseid).increase(card.amount);
+    if (this.cards.has(card.card.multiverseid)) {
+      this.cards.get(card.card.multiverseid).increaseFoil(card.amountFoil);
+      this.cards.get(card.card.multiverseid).increase(card.amount);
     } else {
-      this._cards.set(card.card.multiverseid, card);
+      this.cards.set(card.card.multiverseid, card);
     }
   }
 
   toString(): string {
     const toStore: string[] = [];
 
-    this._cards.forEach(card => {
+    this.cards.forEach(card => {
       toStore.push(card.toString());
     });
 
@@ -96,12 +96,16 @@ class LocalStorage implements CardStorage, CardProvider {
   }
 
   searchCard(set: string, number: string): Promise<MagicCard> {
-    const corresp = Array.from(this._cards.values())
+    const corresp = Array.from(this.cards.values())
       .filter(c => c.card.set === set && c.card.number.toLowerCase() === number.toLowerCase());
     return Promise.resolve((corresp && corresp.length > 0 ? corresp[0].card : null));
   }
 
   allowUpdate(): boolean {
-    return true; // local storage can always be written
+    return this.finishedLoading(); // local storage can always be written
+  }
+
+  finishedLoading(): boolean {
+    return this._cards.isComplete();
   }
 }

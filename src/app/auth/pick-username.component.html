@@ -1,0 +1,27 @@
+<div *ngIf="!sent">
+  <h1>You're almost done...</h1>
+  <p>We just need you to choose an username. This username will be used to allow browsing of your collection or decks, if
+    you make them public.</p>
+
+  <div class="form-horizontal">
+    <div [attr.class]="getClass()">
+      <label for="username" class="col-sm-2 control-label">Username: </label>
+
+      <div class="col-sm-8">
+        <input id="username" required minlength="3" maxlength="22" class="form-control" [(ngModel)]="username" (keyup)="check()" (keydown.enter)="accept()">
+        <span *ngIf="hasErrors()" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+        <span *ngIf="hasErrors()" id="usernameStatus" class="sr-only">(error)</span>
+        <span *ngIf="hasErrors()" id="usernameStatusHelpBlock" class="help-block">{{error}}</span>
+      </div>
+      <div class="col-sm-2">
+
+        <button class="btn btn-success" (click)="accept()" *ngIf="valid">Accept</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="sent">
+  <h2>Processing, please wait...</h2><br/>
+  <img src="assets/loading.svg" alt="loading">
+</div>

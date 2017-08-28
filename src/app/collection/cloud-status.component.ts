@@ -9,35 +9,60 @@ import {LocalCollectionService} from "../local-collection.service";
   selector: 'app-cloud-status',
   templateUrl: './cloud-status.component.html'
 })
-export class BackendTestComponent implements OnInit {
+export class CloudStatusComponent implements OnInit {
   @Input() myStorage: CardStorage;
   @Output() myStorageChange = new EventEmitter<CardStorage>();
-  display: false;
+  display = false;
   collection: BackendCollection;
+  sending = false;
+  sendingPrivacy = false;
+  sent = false;
 
   constructor(public auth: AuthService, private backend: BackendService, private lib: LocalCollectionService) {
   }
 
   ngOnInit(): void {
     this.backend.getOwnCollection().then(c => {
-      this.collection = (c === null ? new BackendCollection() : c);
+      this.collection = c;
     });
   }
 
-  updateCollection(): void {
-    console.log(this.myStorage);
-    console.log(this.myStorage.toString());
-    const data: BackendUpdateRequest = {userCollection: this.myStorage.toString()};
+  updatePrivacy(): void {
     if (this.collection) {
-      data.publicUrl = this.collection.publicUrl;
-      data.public = this.collection.public;
+      this.sendingPrivacy = true;
+      this.backend.updateCollection({public: this.collection.public}).then(r => this.sendingPrivacy = false);
     }
-    this.backend.updateCollection(data);
+  }
+
+  updateCollection(): void {
+    const data: BackendUpdateRequest = {userCollection: this.myStorage.toString()};
+    this.sent = false;
+    this.sending = true;
+
+    this.backend.updateCollection(data).then(r => {
+      this.sent = true;
+      this.sending = false;
+
+      if (r.status === 200 || r.status === 201) {
+        if (this.collection === null) {
+          this.collection = new BackendCollection();
+          this.collection.userCollection = data.userCollection;
+        }
+      }
+    });
   }
 
   loadCollection(): void {
     this.lib.replace(this.collection.userCollection);
     this.myStorage = this.lib.load();
     this.myStorageChange.emit(this.myStorage);
+  }
+
+  get hasName(): boolean {
+    return localStorage.getItem("username") !== null;
+  }
+
+  get name(): string {
+    return localStorage.getItem("username");
   }
 }
