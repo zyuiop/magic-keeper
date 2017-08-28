@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MagicOwnedCard} from "./types/magic-owned-card";
 import {LocalCollectionService} from "./local-collection.service";
 import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "./types/card-filter";
@@ -8,6 +8,8 @@ import {
 import {CardStorage} from "./card-storage";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import 'rxjs/add/operator/switchMap';
+import {NotPublicCollectionError, OnlineCollectionService} from "./online-collection.service";
+import {Response} from "@angular/http";
 
 class DisplayType {
   key: string;
@@ -39,8 +41,12 @@ export class CollectionComponent implements OnInit {
   ];
   displays = DISPLAYS;
   display = "standard";
+  storage: CardStorage = null;
+  error: string = null; // For loading errors only
+  url: string = null;
 
   constructor(private lib: LocalCollectionService,
+              private online: OnlineCollectionService,
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -49,7 +55,29 @@ export class CollectionComponent implements OnInit {
         if (params.has("display")) {
           this.display = params.get("display");
         }
+        if (params.has("url")) {
+          this.url = params.get("url");
+        }
+
+        this.loadStorage();
       });
+  }
+
+  loadStorage(): void {
+    if (this.url === null) {
+      this.storage = this.lib.load();
+    } else {
+      this.online.getCards(this.url).then(resp => this.storage = resp)
+        .catch(err => {
+          if (err instanceof NotPublicCollectionError) {
+            this.error = "This collection is private !";
+          } else if (err instanceof Response && (err as Response).status === 404) {
+            this.error = "This collection doesn't exist !";
+          } else {
+            console.log(err);
+          }
+        });
+    }
   }
 
   get comparator(): Comparator {
@@ -57,7 +85,7 @@ export class CollectionComponent implements OnInit {
   }
 
   get cards(): MagicOwnedCard[] {
-    const cards = this.lib.getCards();
+    const cards = this.storage.getCards();
     return cards
       .filter(card => {
         for (const filter of this.filters) {
@@ -72,13 +100,9 @@ export class CollectionComponent implements OnInit {
 
   get total(): number {
     let total = 0;
-    for (const obj of this.lib.getCards()) {
+    for (const obj of this.storage.getCards()) {
       total += (obj as MagicOwnedCard).totalAmount();
     }
     return total;
-  }
-
-  get storage(): CardStorage {
-    return this.lib;
   }
 }

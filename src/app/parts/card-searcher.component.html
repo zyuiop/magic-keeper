@@ -1,5 +1,5 @@
 <div *ngIf="message" class="alert alert-success" [innerHtml]="message"></div>
-<div class="panel panel-default">
+<div class="panel panel-default" *ngIf="library.allowUpdate()">
   <div class="panel-heading">Add a card</div>
   <div class="panel-body">
       <p><b>Please note:</b> to add a multiside card or a split card, type the number + the letter a (example : 150 becomes 150a)</p>

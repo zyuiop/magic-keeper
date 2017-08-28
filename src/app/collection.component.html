@@ -1,12 +1,27 @@
-<div class="row">
-  <h1 class="col-sm-9" style="display: inline-block;">Card List <small>(tracking <b>{{total}}</b> cards)</small></h1>
-  <div class="col-sm-3"><select class="form-control" style="display: inline-block;" [(ngModel)]="display">
-    <option *ngFor="let disp of displays" value="{{disp.key}}">{{disp.name}}</option>
-  </select></div>
+<div *ngIf="storage">
+  <div class="row">
+    <h1 class="col-sm-9" style="display: inline-block;">Card List <small>(tracking <b>{{total}}</b> cards)</small></h1>
+    <div class="col-sm-3"><select class="form-control" style="display: inline-block;" [(ngModel)]="display">
+      <option *ngFor="let disp of displays" value="{{disp.key}}">{{disp.name}}</option>
+    </select></div>
+  </div>
+
+  <app-cloud-status *ngIf="storage.allowUpdate()" [(myStorage)]="storage"></app-cloud-status>
+  <app-card-searcher *ngIf="storage.allowUpdate()" [library]="storage"></app-card-searcher>
+
+  <app-filter-display [filters]="filters"></app-filter-display>
+  <app-sort-display [comparator]="comparator"></app-sort-display>
+  <app-cards-display [cards]="cards" [storage]="storage" [display]="display"></app-cards-display>
 </div>
-
-<app-card-searcher [library]="storage"></app-card-searcher>
-
-<app-filter-display [filters]="filters"></app-filter-display>
-<app-sort-display [comparator]="comparator"></app-sort-display>
-<app-cards-display [cards]="cards" [storage]="storage" [display]="display"></app-cards-display>
+<div *ngIf="!storage && !error">
+  <div class="loading">
+    <h2>Loading, please wait...</h2><br/>
+    <img src="assets/loading.svg" alt="loading">
+  </div>
+</div>
+<div *ngIf="!storage && error">
+  <div class="alert alert-danger" role="alert">
+    <b>An error occured :</b>
+    <p>{{error}}</p>
+  </div>
+</div>

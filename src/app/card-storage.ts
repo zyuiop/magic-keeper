@@ -34,4 +34,6 @@ export interface CardStorage {
    * be downloading from the net.
    */
   getCards(): MagicOwnedCard[];
+
+  toString(): string;
 }

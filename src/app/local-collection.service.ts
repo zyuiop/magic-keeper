@@ -1,19 +1,25 @@
 import {Injectable} from '@angular/core';
-import {MagicOwnedCard, MagicReducedOwnedCard} from "./types/magic-owned-card";
-import {MagicApiService} from "./magic-api.service";
+import {MagicOwnedCard} from "./types/magic-owned-card";
 import {MagicCard} from "./types/magic-card";
 import {CardStorage} from "./card-storage";
 import {CardProvider} from "./card-provider";
+import {CardsLoaderService} from "./cards-loader.service";
 
 @Injectable()
-export class LocalCollectionService implements CardStorage, CardProvider {
-  private _cards: Map<number, MagicOwnedCard> = new Map();
-  private _lastGenString: string = null;
-  private _hasChanged = true;
+export class LocalCollectionService {
+  constructor(private loader: CardsLoaderService) {}
 
-  constructor(private api: MagicApiService) {
-    this.load();
+  load(): LocalStorage {
+    return new LocalStorage(this.loader.loadString(localStorage.getItem("cards")));
   }
+
+  replace(cards: string): void {
+    localStorage.setItem("cards", cards);
+  }
+}
+
+class LocalStorage implements CardStorage, CardProvider {
+  constructor(private _cards: Map<number, MagicOwnedCard>) {}
 
   /**
    * Add a given card to the library, in a given quantity
@@ -59,19 +65,7 @@ export class LocalCollectionService implements CardStorage, CardProvider {
     } else {
       throw new Error("This card is not in the deck !");
     }
-
-    this._hasChanged = true;
     this.save();
-  }
-
-  /**
-   * Merges the library map with some other map
-   * @param {Map<number, MagicOwnedCard>} otherMap
-   */
-  private merge(otherMap: Map<number, MagicOwnedCard>): void {
-    otherMap.forEach((value: MagicOwnedCard, key: number) => {
-      this.putCard(value);
-    });
   }
 
   private putCard(card: MagicOwnedCard): void {
@@ -85,69 +79,25 @@ export class LocalCollectionService implements CardStorage, CardProvider {
     } else {
       this._cards.set(card.card.multiverseid, card);
     }
-
-    this._hasChanged = true;
   }
 
-  private generateString(): void {
+  toString(): string {
     const toStore: string[] = [];
 
     this._cards.forEach(card => {
       toStore.push(card.toString());
     });
 
-    this._lastGenString = toStore.join(";");
-    this._hasChanged = false;
-  }
-
-  private toString(): string {
-    if (this._hasChanged) {
-      this.generateString();
-    }
-    return this._lastGenString;
+    return toStore.join(";");
   }
 
   private save(): void {
     localStorage.setItem("cards", this.toString());
   }
 
-  private loadString(stored: string): void {
-    if (stored !== null) {
-      let counter = 0;
-      const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
-
-      while (storedCards.length > 0) {
-        const stack: Map<number, MagicReducedOwnedCard> = new Map();
-        let stackSize = 0;
-        // add 100 cards in the "stack"
-        while (storedCards.length > 0 && stackSize < 100) {
-          const cur = storedCards.pop();
-          stack.set(cur.cardId, cur);
-          stackSize++;
-          if (cur.double) {
-            stackSize++; // double cards
-          }
-        }
-
-        // process the "stack"
-        const cid = ++counter;
-        console.log("Sending request " + cid + " with " + stack.size + " cards");
-        console.log(stack);
-        this.api.getCards(stack).then(res => {
-          console.log("Reply for request " + cid + " with " + res.size + " cards");
-          console.log(res);
-          this.merge(res);
-        });
-      }
-    }
-  }
-
-  private load(): void {
-    this.loadString(localStorage.getItem("cards"));
-  }
-
   searchCard(set: string, number: string): Promise<MagicCard> {
-    const corresp = Array.from(this._cards.values()).filter(c => c.card.set === set && c.card.number.toLowerCase() === number.toLowerCase());
+    const corresp = Array.from(this._cards.values())
+      .filter(c => c.card.set === set && c.card.number.toLowerCase() === number.toLowerCase());
     return Promise.resolve((corresp && corresp.length > 0 ? corresp[0].card : null));
   }
 

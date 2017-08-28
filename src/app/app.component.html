@@ -1,0 +1,63 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Magic Keeper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a routerLink="my">My Collection</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right" *ngIf="auth.isAuthenticated()">
+        <li><a class="btn" (click)="auth.logout()"><b class="glyphicon glyphicon-off"></b> Log Out</a></li>
+        <!--<li><a href="../navbar/">Default</a></li>
+        <li><a href="../navbar-static-top/">Static top</a></li>
+        <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>-->
+      </ul>
+      <ul class="nav navbar-nav navbar-right" *ngIf="!auth.isAuthenticated()">
+        <li><a class="btn" (click)="auth.login()"><b class="glyphicon glyphicon-user"></b> Log In</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+
+    <!--<div class="navbar-header">
+      <a class="navbar-brand" href="#">Magic Keeper</a>
+
+      <button
+        class="btn btn-primary btn-margin"
+        routerLink="/">
+        Home
+      </button>
+
+      <button
+        class="btn btn-primary btn-margin"
+        *ngIf="!auth.isAuthenticated()"
+        (click)="auth.login()">
+        Log In
+      </button>
+
+      <button
+        class="btn btn-primary btn-margin"
+        *ngIf="auth.isAuthenticated()"
+        (click)="auth.logout()">
+        Log Out
+      </button>
+
+      <button
+        class="btn btn-primary btn-margin"
+        *ngIf="auth.isAuthenticated()"
+        (click)="auth.testRequest()">
+        Test a request
+      </button>
+
+    </div>-->
+  </div>
+</nav>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
