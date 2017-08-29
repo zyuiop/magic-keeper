@@ -32,7 +32,7 @@ export class MagicApiService implements CardProvider {
         }
         return null;
       })
-      .then(this.getMultisidedCard)
+      .then(map => this.getMultisidedCard(map))
       .catch(this.handleError);
   }
 
@@ -71,11 +71,12 @@ export class MagicApiService implements CardProvider {
   }
 
   private getMultisidedCard(card: MagicCard): Promise<MagicCard> {
-    if (!card.names || card.names.length <= 1) {
+    if (!card || !card.names || card.names.length <= 1) {
       return Promise.resolve(card);
     }
 
     const multiverseId = card.multiverseid;
+    console.log(this);
     return this.http.get(this.cardsUrl + "?multiverseid=" + multiverseId)
       .toPromise()
       .then(result => {

@@ -22,6 +22,8 @@ export class CardSearcherComponent implements OnInit {
   amount: number;         // The amount
   amountFoil: number;     // The amount in foil cards
   message: string;        // The message to display on the top
+  error: string;
+  searching = false;
   currentCard: MagicCard; // The card found by the API (if any)
 
   constructor(private api: MagicApiService) {
@@ -35,19 +37,35 @@ export class CardSearcherComponent implements OnInit {
     });
   }
 
+  reset(): void {
+    this.currentCard = null;
+    this.error = null;
+  }
+
   onSearch(): void {
+    this.error = null;
+    this.searching = true;
     this.api.searchCard(this.set, this.number).then(card => {
-      this.currentCard = card;
-      setTimeout(() => {
-        this.cardAmount.nativeElement.focus();
-        this.amount = null;
-        this.amountFoil = null;
-      }, 50);
+      this.searching = false;
+      if (card === null) {
+        this.error = "No card found with this data...";
+      } else {
+        this.currentCard = card;
+        setTimeout(() => {
+          this.cardAmount.nativeElement.focus();
+          this.amount = null;
+          this.amountFoil = null;
+        }, 50);
+      }
+    }).catch(err => {
+      this.error = "Error while searching : " + err;
+      this.searching = false;
     });
   }
 
   onValidate(): void {
     this.number = null;
+    this.error = null;
     if (isNaN(this.amount) || this.amount === null) {
       this.amount = 0;
     }
