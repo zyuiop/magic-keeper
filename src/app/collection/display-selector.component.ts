@@ -32,7 +32,7 @@ export class DisplaySelectorComponent implements OnInit{
   displays = DISPLAYS;
   display = "standard";
 
-  constructor(private route: ActivatedRoute){}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap

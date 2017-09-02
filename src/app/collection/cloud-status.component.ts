@@ -22,9 +22,11 @@ export class CloudStatusComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.backend.getOwnCollection().then(c => {
-      this.collection = c;
-    });
+    if (this.auth.isAuthenticated()) {
+      this.backend.getOwnCollection().then(c => {
+        this.collection = c;
+      });
+    }
   }
 
   updatePrivacy(): void {
