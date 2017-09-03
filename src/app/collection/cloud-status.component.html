@@ -8,6 +8,7 @@
       <div class="modal-body">
         <p>Are you sure you want to load your collection from the cloud? Your local collection will be <b>completely
         overwritten</b> and replaced by the downloaded collection.</p>
+        <p *ngIf="collection">The current saved collection was saved at: {{collection.lastChanged}}</p>
         <p><b>This operation cannot be undone</b></p>
       </div>
       <div class="modal-footer">
@@ -24,6 +25,7 @@
     <button *ngIf="!display" (click)="display = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
     Cloud Saving</div>
   <div class="panel-body" *ngIf="display && hasName">
+
       <div class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-lg-3">Save your collection in the cloud: </label>
