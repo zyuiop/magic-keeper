@@ -6,3 +6,7 @@ export function getInternalValue<T>(card: any, field: string): T {
   }
   return card[field] as T;
 }
+
+export function proxy(url: string): string {
+  return "https://zyuiop.net/img.php?url=" + encodeURIComponent(url);
+}

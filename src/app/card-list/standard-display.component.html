@@ -7,7 +7,7 @@
 
   <tr *ngFor="let card of cards">
     <td>
-      <img src="{{card.card.imageUrl}}">
+      <img src="{{card.card.imageUrl | proxy}}">
     </td>
 
     <td>

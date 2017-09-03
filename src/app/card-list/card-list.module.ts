@@ -12,6 +12,7 @@ import {RarityPipe} from "./rarity-label.pipe";
 import {CardsDisplayComponent} from "./cards-display.component";
 import {SortDisplayComponent} from "./sort-display.component";
 import {FilterDisplayComponent} from "./filter-display.component";
+import {ProxyPipe} from "./proxy.pipe";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {FilterDisplayComponent} from "./filter-display.component";
     ReplaceNl,
     ReplaceMana,
     RarityPipe,
+    ProxyPipe,
     FilterDisplayComponent,
     SortDisplayComponent,
   ],
@@ -32,7 +34,7 @@ import {FilterDisplayComponent} from "./filter-display.component";
   ],
   exports: [
     CardSummaryComponent,
-    CardsDisplayComponent
+    CardsDisplayComponent, ProxyPipe
   ]
 })
 export class CardListModule { }

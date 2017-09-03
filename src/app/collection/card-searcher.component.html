@@ -25,7 +25,7 @@
 
     <div *ngIf="currentCard" class="row">
       <div class="col-md-3">
-        <img src="{{currentCard.imageUrl}}">
+        <img src="{{currentCard.imageUrl | proxy}}">
       </div>
 
       <div class="col-md-9">
