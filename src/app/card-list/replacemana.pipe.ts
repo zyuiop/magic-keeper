@@ -2,6 +2,7 @@
 // http://gatherer.wizards.com/Handlers/Image.ashx?size=medium&name=3&type=symbol
 
 import { Pipe, PipeTransform } from '@angular/core';
+import {proxy} from "../types/utils";
 
 @Pipe({name: 'replacemana'})
 export class ReplaceMana implements PipeTransform {
@@ -11,7 +12,7 @@ export class ReplaceMana implements PipeTransform {
     }
     return value ? value.replace(/{([A-Z0-9])}/g, (u1, p1) => {
       p1 = (p1 === "T" ? "tap" : p1);
-      return '<img src="http://gatherer.wizards.com/Handlers/Image.ashx?size=' + size + '&name=' + p1 + '&type=symbol">';
+      return '<img src="' + proxy('http://gatherer.wizards.com/Handlers/Image.ashx?size=' + size + '&name=' + p1 + '&type=symbol') + '">';
     }) : value;
   }
 }
