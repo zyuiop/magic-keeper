@@ -8,5 +8,5 @@ export function getInternalValue<T>(card: any, field: string): T {
 }
 
 export function proxy(url: string): string {
-  return "https://zyuiop.net/img.php?url=" + encodeURIComponent(url);
+  return url.replace(/^http:\/\/gatherer\.wizards\.com\/Handlers\/Image\.ashx\?(.+)$/, (sub, s1) => "https://zyuiop.net/img.php?url=" + encodeURIComponent(s1));
 }
