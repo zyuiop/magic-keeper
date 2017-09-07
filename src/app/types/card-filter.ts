@@ -22,6 +22,10 @@ export class NumericFilter extends CardFilter<number> {
   check(card: MagicOwnedCard): boolean {
     const internalValue = getInternalValue<number>(card, this._field);
 
+    if (isUndefined(internalValue)) {
+      return false;
+    }
+
     if (this.comparator === null || this.value <= 0 || this.value === null || isNaN(this.value)) {
       return true;
     }
@@ -51,7 +55,13 @@ export class StringFilter extends CardFilter<string> {
       return true;
     }
 
-    return getInternalValue<string>(card, this._field).toLowerCase().indexOf(this.value.toLowerCase()) !== -1;
+    const internal = getInternalValue<string>(card, this._field);
+
+    if (isUndefined(internal) || internal === null) {
+      return false;
+    }
+
+    return internal.toLowerCase().indexOf(this.value.toLowerCase()) !== -1;
   }
 }
 
@@ -61,6 +71,34 @@ export class SelectFilter extends StringFilter {
   constructor(field: string, displayName: string, values: Map<string, string>, defaultValue: string) {
     super(field, displayName, defaultValue);
     this.values = values;
+  }
+}
+
+export class MultiFieldStringFilter extends CardFilter<string> {
+  private fields: string[];
+
+  constructor(displayName: string, defaultValue: string, fields: string[]) {
+    super(null, displayName, defaultValue);
+    this.fields = fields;
+  }
+
+  check(card: MagicOwnedCard): boolean {
+    if (this.value === null || this.value === "") {
+      return true;
+    }
+
+    for (const field of this.fields) {
+      const internal = getInternalValue<string>(card, field);
+
+      if (isUndefined(internal) || internal === null) {
+        continue;
+      }
+
+      if (internal.toLowerCase().indexOf(this.value.toLowerCase()) !== -1) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

@@ -2,7 +2,7 @@ import {Component, Input} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
 import {CardStorage} from "../card-storage";
 import {Comparator} from "../types/sort";
-import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "../types/card-filter";
+import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter, MultiFieldStringFilter} from "../types/card-filter";
 
 @Component({
   selector: 'app-cards-display',
@@ -23,6 +23,7 @@ export class CardsDisplayComponent {
     new StringFilter("card.setName", "Set name", null),
     new StringFilter("card.rarity", "Rarity", null),
     new StringFilter("card.type", "Type", null),
+    new MultiFieldStringFilter("General search", null, ["card.name", "card.text", "card.flavor", "card.type"]),
     new StringArrayFilter("card.colors", "Color", null),
     new SelectFilter("card.layout", "Layout", new Map([["normal", "Normal"], ["aftermath", "Aftermath"]]), null),
   ];
