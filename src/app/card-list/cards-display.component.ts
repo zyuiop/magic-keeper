@@ -18,6 +18,8 @@ export class CardsDisplayComponent {
     new NumericFilter("amountFoil", "Foil cards amount", 0),
     new NumericFilter("card.cmc", "Converted mana cost", 0),
     new StringFilter("card.name", "Card name", null),
+    new StringFilter("card.text", "Card text", null),
+    new StringFilter("card.flavor", "Card flavortext", null),
     new StringFilter("card.setName", "Set name", null),
     new StringFilter("card.rarity", "Rarity", null),
     new StringFilter("card.type", "Type", null),

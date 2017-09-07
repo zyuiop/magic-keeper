@@ -51,7 +51,7 @@ export class StringFilter extends CardFilter<string> {
       return true;
     }
 
-    return getInternalValue<string>(card, this._field).indexOf(this.value) !== -1;
+    return getInternalValue<string>(card, this._field).toLowerCase().indexOf(this.value.toLowerCase()) !== -1;
   }
 }
 
@@ -76,7 +76,7 @@ export class StringArrayFilter extends CardFilter<string> {
     }
 
     for (const s of array) {
-      if (s.indexOf(this.value) !== -1) {
+      if (s.toLowerCase().indexOf(this.value.toLowerCase()) !== -1) {
         return true;
       }
     }
