@@ -13,6 +13,7 @@ before_install:
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_e64c3ee27018_key -iv $encrypted_e64c3ee27018_iv
   -in deploy_rsa.enc -out deploy_rsa -d
+- chmod 600 ./deploy_rsa
 deploy:
 - provider: script
   skip_cleanup: true
