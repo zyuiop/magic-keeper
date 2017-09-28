@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {isUndefined} from "util";
-import {BackendService} from "../backend.service";
+import {BackendService} from "../services/backend.service";
 import {Response} from "@angular/http";
 import {Router} from "@angular/router";
 

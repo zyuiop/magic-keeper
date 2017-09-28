@@ -1,6 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
-import {CardStorage} from "../card-storage";
+import {CardStorage} from "../services/card-storage";
 
 @Component({
   selector: 'app-card-qty-display',

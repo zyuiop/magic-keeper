@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
-import {MagicSet} from "./types/magic-set";
+import {MagicSet} from "../types/magic-set";
 import 'rxjs/add/operator/toPromise';
-import {MagicCard} from "./types/magic-card";
-import {MagicOwnedCard, MagicReducedOwnedCard} from "./types/magic-owned-card";
+import {MagicCard} from "../types/magic-card";
+import {MagicOwnedCard, MagicReducedOwnedCard} from "../types/magic-owned-card";
 import {isNull, isUndefined} from "util";
 import {CardProvider} from "./card-provider";
 

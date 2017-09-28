@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Headers, Http, Response} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {AuthHttp} from "angular2-jwt";
-import {BackendCollection} from "./types/backend-collection";
-import {BackendProfile} from "./types/backend-profile";
+import {BackendCollection} from "../types/backend-collection";
+import {BackendProfile} from "../types/backend-profile";
 
 @Injectable()
 export class BackendService {

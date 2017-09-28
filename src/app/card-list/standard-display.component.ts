@@ -1,4 +1,4 @@
-import {CardStorage} from "../card-storage";
+import {CardStorage} from "../services/card-storage";
 import {Component, Input} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
 

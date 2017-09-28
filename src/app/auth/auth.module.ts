@@ -1,6 +1,7 @@
 import {NgModule} from "@angular/core";
 import {Http, RequestOptions} from "@angular/http";
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import {AuthRoutingModule} from "./auth-routing.module";
 
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
@@ -14,6 +15,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       useFactory: authHttpServiceFactory,
       deps: [Http, RequestOptions]
     }
-  ]
+  ],
+  imports: [AuthRoutingModule]
 })
 export class AuthModule {}

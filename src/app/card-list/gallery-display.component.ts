@@ -1,5 +1,5 @@
 import {MagicOwnedCard} from "../types/magic-owned-card";
-import {CardStorage} from "../card-storage";
+import {CardStorage} from "../services/card-storage";
 import {Component, Input} from "@angular/core";
 
 @Component({

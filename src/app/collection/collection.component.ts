@@ -1,14 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MagicOwnedCard} from "../types/magic-owned-card";
-import {LocalCollectionService} from "../local-collection.service";
+import {LocalCollectionService} from "../services/local-collection.service";
 import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter} from "../types/card-filter";
 import {
   Comparator
 } from "../types/sort";
-import {CardStorage} from "../card-storage";
+import {CardStorage} from "../services/card-storage";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import 'rxjs/add/operator/switchMap';
-import {NotPublicCollectionError, OnlineCollectionService} from "../online-collection.service";
+import {NotPublicCollectionError, OnlineCollectionService} from "../services/online-collection.service";
 import {Response} from "@angular/http";
 
 @Component({

@@ -11,7 +11,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a routerLink="my">My Collection</a></li>
+        <li><a routerLink="collection/my">My Collection</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right" *ngIf="auth.isAuthenticated()">
         <li><a class="btn" (click)="auth.logout()"><b class="glyphicon glyphicon-off"></b> Log Out</a></li>

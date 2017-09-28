@@ -3,7 +3,7 @@ import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
 import "rxjs/add/operator/toPromise";
-import {BackendService} from "../backend.service";
+import {BackendService} from "../services/backend.service";
 import {Location} from "@angular/common";
 
 

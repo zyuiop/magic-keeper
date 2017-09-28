@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {MagicOwnedCard, MagicReducedOwnedCard} from "./types/magic-owned-card";
+import {MagicOwnedCard, MagicReducedOwnedCard} from "../types/magic-owned-card";
 import {MagicApiService} from "./magic-api.service";
-import {MagicCard} from "./types/magic-card";
+import {MagicCard} from "../types/magic-card";
 import {CardStorage} from "./card-storage";
 import {CardProvider} from "./card-provider";
 import {Observable} from "rxjs/Observable";

@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {BackendService, BackendUpdateRequest} from "../backend.service";
+import {BackendService, BackendUpdateRequest} from "../services/backend.service";
 import {BackendCollection} from "../types/backend-collection";
 import {AuthService} from "../auth/auth.service";
-import {CardStorage} from "../card-storage";
-import {LocalCollectionService} from "../local-collection.service";
+import {CardStorage} from "../services/card-storage";
+import {LocalCollectionService} from "../services/local-collection.service";
 
 @Component({
   selector: 'app-cloud-status',

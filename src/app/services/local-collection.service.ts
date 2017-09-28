@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {MagicOwnedCard} from "./types/magic-owned-card";
-import {MagicCard} from "./types/magic-card";
+import {MagicOwnedCard} from "../types/magic-owned-card";
+import {MagicCard} from "../types/magic-card";
 import {CardStorage} from "./card-storage";
 import {CardProvider} from "./card-provider";
 import {CardsLoaderService, PartialData} from "./cards-loader.service";
