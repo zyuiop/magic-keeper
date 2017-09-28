@@ -45,4 +45,12 @@ export class CardsDisplayComponent {
       })
       .sort((c1, c2) => this._comparator.compare(c1, c2));
   }
+
+  get matching(): number {
+    let total = 0;
+    for (const obj of this.cards) {
+      total += (obj as MagicOwnedCard).totalAmount();
+    }
+    return total;
+  }
 }
