@@ -12,6 +12,7 @@ import {BackendService} from "../backend.service";
 import {MagicApiService} from "../magic-api.service";
 import {DisplaySelectorComponent} from "./display-selector.component";
 import {PublicCollectionComponent} from "./public-collection.component";
+import {CardDisplayModule} from "../card-display/card-display.module";
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import {PublicCollectionComponent} from "./public-collection.component";
     PublicCollectionComponent
   ],
   imports: [
-    BrowserModule, FormsModule, CardListModule
+    BrowserModule, FormsModule, CardListModule, CardDisplayModule
   ],
   exports: [
     CollectionComponent, PublicCollectionComponent
