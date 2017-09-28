@@ -2,7 +2,7 @@ import {MagicCard} from "../types/magic-card";
 import {MagicOwnedCard} from "../types/magic-owned-card";
 
 /**
- * Represents something that saves cards, either an API, a card list, a deck, a collection, a deck side, ...
+ * Represents something that saves cards, either an API, a card list, a decks, a collection, a decks side, ...
  */
 export interface CardStorage {
 

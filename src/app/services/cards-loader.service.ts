@@ -52,6 +52,10 @@ export class CardsLoaderService {
     });
   }
 
+  loadFromStorage(storageKey: string): PartialData<Map<number, MagicOwnedCard>> {
+    return this.loadString(localStorage.getItem(storageKey));
+  }
+
   loadString(stored: string): PartialData<Map<number, MagicOwnedCard>> {
     const map: Map<number, MagicOwnedCard> = new Map();
     const partial = new PartialDataImpl(map);

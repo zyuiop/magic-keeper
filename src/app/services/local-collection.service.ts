@@ -9,8 +9,9 @@ import {CardsLoaderService, PartialData} from "./cards-loader.service";
 export class LocalCollectionService {
   constructor(private loader: CardsLoaderService) {}
 
-  load(): LocalStorage {
-    return new LocalStorage(this.loader.loadString(localStorage.getItem("cards")));
+  load(key?: string): LocalStorage {
+    key = (key == null ? "cards" : key);
+    return new LocalStorage(this.loader.loadFromStorage(key), key);
   }
 
   replace(cards: string): void {
@@ -18,8 +19,8 @@ export class LocalCollectionService {
   }
 }
 
-class LocalStorage implements CardStorage, CardProvider {
-  constructor(private _cards: PartialData<Map<number, MagicOwnedCard>>) {}
+export class LocalStorage implements CardStorage, CardProvider {
+  constructor(private _cards: PartialData<Map<number, MagicOwnedCard>>, private _saveDestination: string) {}
 
   /**
    * Add a given card to the library, in a given quantity
@@ -63,7 +64,7 @@ class LocalStorage implements CardStorage, CardProvider {
         this.cards.delete(card.multiverseid);
       }
     } else {
-      throw new Error("This card is not in the deck !");
+      throw new Error("This card is not in the decks !");
     }
     this.save();
   }
@@ -91,8 +92,8 @@ class LocalStorage implements CardStorage, CardProvider {
     return toStore.join(";");
   }
 
-  private save(): void {
-    localStorage.setItem("cards", this.toString());
+  protected save(): void {
+    localStorage.setItem(this._saveDestination, this.toString());
   }
 
   searchCard(set: string, number: string): Promise<MagicCard> {
