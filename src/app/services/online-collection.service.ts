@@ -8,7 +8,7 @@ import {CardsLoaderService, PartialData} from "./cards-loader.service";
 import {BackendService} from "./backend.service";
 
 export class OnlineCardStorage implements CardStorage {
-  constructor(private cards: PartialData<Map<number, MagicOwnedCard>>, private _username: string) {};
+  constructor(private cards: PartialData<Map<number, MagicOwnedCard>>, private _username: string, private _lastChange: string) {};
 
   addCard(card: MagicCard, amount: number, amountFoil: number): void {
     throw new Error("Method not implemented.");
@@ -33,6 +33,10 @@ export class OnlineCardStorage implements CardStorage {
   finishedLoading(): boolean {
     return this.cards.isComplete();
   }
+
+  lastChange(): Date {
+    return new Date(this._lastChange);
+  }
 }
 
 @Injectable()
@@ -43,7 +47,7 @@ export class OnlineCollectionService {
   getCards(url: string): Promise<OnlineCardStorage> {
     return this.backend.getCollection(url).then(collection => {
       if (collection.public) {
-        return new OnlineCardStorage(this.loader.loadString(collection.userCollection), collection.username);
+        return new OnlineCardStorage(this.loader.loadString(collection.userCollection), collection.username, collection.lastChanged);
       } else {
         throw new NotPublicCollectionError();
       }

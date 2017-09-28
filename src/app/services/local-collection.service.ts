@@ -94,6 +94,16 @@ export class LocalStorage implements CardStorage, CardProvider {
 
   protected save(): void {
     localStorage.setItem(this._saveDestination, this.toString());
+    localStorage.setItem(this._saveDestination + ".lastSave", new Date().toString());
+  }
+
+  lastChange(): Date {
+    const last = localStorage.getItem(this._saveDestination + ".lastSave");
+    if (last === null) {
+      return null;
+    }
+
+    return new Date(last);
   }
 
   searchCard(set: string, number: string): Promise<MagicCard> {

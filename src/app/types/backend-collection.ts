@@ -4,5 +4,5 @@ export class BackendCollection {
   username?: string;
   userCollection: string;
   public = false;
-  lastChanged: Date;
+  lastChanged: string;
 }

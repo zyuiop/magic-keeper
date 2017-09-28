@@ -18,15 +18,21 @@ export class CloudStatusComponent implements OnInit {
   sendingPrivacy = false;
   sent = false;
 
+  static reloadBackend(comp: CloudStatusComponent): Promise<void> {
+    if (comp.auth.isAuthenticated()) {
+      return comp.backend.getOwnCollection().then(c => {
+        comp.collection = c;
+        comp.lastLoad = new Date(comp.collection.lastChanged);
+      });
+    }
+    return Promise.resolve(null);
+  }
+
   constructor(public auth: AuthService, private backend: BackendService, private lib: LocalCollectionService) {
   }
 
   ngOnInit(): void {
-    if (this.auth.isAuthenticated()) {
-      this.backend.getOwnCollection().then(c => {
-        this.collection = c;
-      });
-    }
+    CloudStatusComponent.reloadBackend(this);
   }
 
   updatePrivacy(): void {
@@ -42,22 +48,70 @@ export class CloudStatusComponent implements OnInit {
     this.sending = true;
 
     this.backend.updateCollection(data).then(r => {
-      this.sent = true;
-      this.sending = false;
-
       if (r.status === 200 || r.status === 201) {
         if (this.collection === null) {
           this.collection = new BackendCollection();
           this.collection.userCollection = data.userCollection;
         }
       }
+    }).then(() => { CloudStatusComponent.reloadBackend(this); }).then(() => {
+      this.sent = true;
+      this.sending = false;
     });
   }
 
   loadCollection(): void {
-    this.lib.replace(this.collection.userCollection);
-    this.myStorage = this.lib.load();
-    this.myStorageChange.emit(this.myStorage);
+    CloudStatusComponent.reloadBackend(this).then(() => {
+      this.lib.replace(this.collection.userCollection);
+      this.myStorage = this.lib.load();
+      this.myStorageChange.emit(this.myStorage);
+    });
+  }
+
+  get outdated(): boolean {
+    const lastLoad = this.lastLoad;
+
+    if (!this.collection || !lastLoad) {
+      return true;
+    }
+
+    const lastUpdate = this.collection.lastChanged;
+    return new Date(lastUpdate).getTime() > lastLoad.getTime() + 5000;
+  }
+
+  get notSaved(): boolean {
+    if (!this.myStorage.lastChange()) {
+      return false;
+    }
+
+    if (!this.collection) {
+      return true;
+    }
+
+    const lastRemote = this.collection.lastChanged;
+    const lastLocal = this.myStorage.lastChange();
+    return new Date(lastRemote).getTime() < lastLocal.getTime();
+  }
+
+  get lastLoad(): Date {
+    const last = localStorage.getItem("cards.lastSync");
+    if (last === null) {
+      return null;
+    }
+
+    return new Date(last);
+  }
+
+  get backendLastUpdate(): Date {
+    if (!this.collection) {
+      return null;
+    }
+
+    return new Date(this.collection.lastChanged);
+  }
+
+  set lastLoad(lastLoad: Date) {
+    localStorage.setItem("cards.lastSync", lastLoad.toString());
   }
 
   get hasName(): boolean {

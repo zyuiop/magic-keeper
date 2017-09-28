@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="loadModal">
+<div class="modal fade" tabindex="-1" role="dialog" id="loadModal" xmlns="">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -8,7 +8,9 @@
       <div class="modal-body">
         <p>Are you sure you want to load your collection from the cloud? Your local collection will be <b>completely
         overwritten</b> and replaced by the downloaded collection.</p>
-        <p *ngIf="collection">The current saved collection was saved at: {{collection.lastChanged}}</p>
+        <p *ngIf="backendLastUpdate">The current saved collection was saved at: <em>{{backendLastUpdate}}</em></p>
+        <p *ngIf="lastLoad">The local collection was last synced at: <em>{{lastLoad}}</em></p>
+        <p *ngIf="myStorage.lastChange()">The local collection was last modified at: <em>{{myStorage.lastChange()}}</em></p>
         <p><b>This operation cannot be undone</b></p>
       </div>
       <div class="modal-footer">
@@ -19,14 +21,30 @@
   </div>
 </div>
 
+<div *ngIf="auth.isAuthenticated() && collection && outdated" class="alert alert-warning" role="alert"><b>Local copy might be updated! </b>There is a saved version
+of this collection in the cloud that appears to be more recent than the one you are currently working on.<br/><br/>
+<b>What can I do?</b>
+  <ul>
+    <li *ngIf="lastLoad === null">If you think your collection is up to date, then <b>Save it</b> and <b>AFTER</b> that, load it. Be sure that you save it first, as if you don't you might loose some changes.</li>
+    <li>Try to load the collection from the cloud using the <b>Load Collection</b> button in the <b>Cloud Saving</b> panel.</li>
+  </ul>
+
+</div>
+
+<div *ngIf="auth.isAuthenticated() && collection && !outdated && notSaved" class="alert alert-warning" role="alert"><b>Local copy is not saved! </b>You have made changes on your collection that are not saved in the cloud. Click on the <b>Save Collection</b> in the <b>Cloud Saving</b> panel to save it.</div>
+
 <div class="panel panel-default" *ngIf="auth.isAuthenticated()">
   <div class="panel-heading">
     <button *ngIf="display" (click)="display = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
     <button *ngIf="!display" (click)="display = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
-    Cloud Saving</div>
+    Cloud Saving
+    <b *ngIf="collection && outdated" class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="top" title="Your local collection might be outdated"> </b>
+    <b *ngIf="auth.isAuthenticated() && collection && !outdated && notSaved" class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="top" title="Local collection not saved"> </b>
+  </div>
   <div class="panel-body" *ngIf="display && hasName">
 
-      <div class="form-horizontal">
+
+    <div class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-lg-3">Save your collection in the cloud: </label>
           <div class="col-lg-3">

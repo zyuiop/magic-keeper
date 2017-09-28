@@ -38,4 +38,6 @@ export interface CardStorage {
   toString(): string;
 
   finishedLoading(): boolean;
+
+  lastChange(): Date;
 }
