@@ -1,9 +1,0 @@
-<div *ngIf="storage">
-  <div class="row">
-    <h1 class="col-sm-9" style="display: inline-block;">{{storage.username}}'s card list <small>(<b>{{total}}</b> cards)</small></h1>
-    <div class="col-sm-3"><app-display-selector #disp></app-display-selector></div>
-  </div>
-
-  <app-cards-display [storage]="storage" [display]="disp.display"></app-cards-display>
-</div>
-<app-collection-loading *ngIf="!storage" [error]="error"></app-collection-loading>

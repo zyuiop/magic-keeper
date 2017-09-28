@@ -11,7 +11,6 @@ import {CloudStatusComponent} from "./cloud-status.component";
 import {BackendService} from "../services/backend.service";
 import {MagicApiService} from "../services/magic-api.service";
 import {DisplaySelectorComponent} from "./display-selector.component";
-import {PublicCollectionComponent} from "./public-collection.component";
 import {CardDisplayModule} from "../card-display/card-display.module";
 import {CollectionRoutingModule} from "./collection-routing.module";
 
@@ -23,13 +22,9 @@ import {CollectionRoutingModule} from "./collection-routing.module";
     CardSearcherComponent,
     CloudStatusComponent,
     DisplaySelectorComponent,
-    PublicCollectionComponent
   ],
   imports: [
     BrowserModule, FormsModule, CardListModule, CardDisplayModule, CollectionRoutingModule
-  ],
-  exports: [
-    CollectionComponent, PublicCollectionComponent
   ],
   providers: [
     LocalCollectionService,
