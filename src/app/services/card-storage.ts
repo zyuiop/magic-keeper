@@ -23,7 +23,7 @@ export interface CardStorage {
   removeCard(card: MagicCard, amount: number, amountFoil: number): void;
 
   /**
-   * Check if this CardStorage can be updated
+   * Check if this DeckStorage can be updated
    * @returns {boolean}
    */
   allowUpdate(): boolean;

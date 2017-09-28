@@ -1,9 +1,8 @@
 import {Injectable} from "@angular/core";
-import {PartialData} from "../services/cards-loader.service";
 import {MagicDeckInfo} from "../types/magic-deck-info";
-import {LocalCollectionService, LocalStorage} from "../services/local-collection.service";
-import {MagicOwnedCard} from "../types/magic-owned-card";
+import {LocalCollectionService} from "../services/local-collection.service";
 import {MagicDeck} from "../services/magic-deck";
+import {DeckStorage} from "../services/deck-storage";
 
 @Injectable()
 export class LocalDecksProviderService {

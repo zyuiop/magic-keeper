@@ -1,7 +1,6 @@
 import {FormsModule} from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 import {NgModule} from "@angular/core";
-import {CollectionLoadingComponent} from "./collection-loading.component";
 import {CollectionComponent} from "./collection.component";
 import {CardListModule} from "../card-list/card-list.module";
 import {LocalCollectionService} from "../services/local-collection.service";
@@ -13,18 +12,18 @@ import {MagicApiService} from "../services/magic-api.service";
 import {DisplaySelectorComponent} from "./display-selector.component";
 import {CardDisplayModule} from "../card-display/card-display.module";
 import {CollectionRoutingModule} from "./collection-routing.module";
+import {CollectionLoadingModule} from "../collection-loading/collection-loading.module";
 
 
 @NgModule({
   declarations: [
-    CollectionLoadingComponent,
     CollectionComponent,
     CardSearcherComponent,
     CloudStatusComponent,
     DisplaySelectorComponent,
   ],
   imports: [
-    BrowserModule, FormsModule, CardListModule, CardDisplayModule, CollectionRoutingModule
+    BrowserModule, FormsModule, CardListModule, CardDisplayModule, CollectionRoutingModule, CollectionLoadingModule
   ],
   providers: [
     LocalCollectionService,
