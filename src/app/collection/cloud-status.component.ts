@@ -22,7 +22,7 @@ export class CloudStatusComponent implements OnInit {
     if (comp.auth.isAuthenticated()) {
       return comp.backend.getOwnCollection().then(c => {
         comp.collection = c;
-        comp.lastLoad = new Date(comp.collection.lastChanged);
+        console.log("chapo");
       });
     }
     return Promise.resolve(null);
@@ -33,12 +33,19 @@ export class CloudStatusComponent implements OnInit {
 
   ngOnInit(): void {
     CloudStatusComponent.reloadBackend(this);
+    this.myStorage.addChangeListener(() => this.autoUpdate());
+
+    if (this.notSaved) {
+      this.autoUpdate();
+    }
   }
 
   updatePrivacy(): void {
     if (this.collection) {
       this.sendingPrivacy = true;
-      this.backend.updateCollection({public: this.collection.public}).then(r => this.sendingPrivacy = false);
+      this.backend.updateCollection({public: this.collection.public})
+        .then(r => this.sendingPrivacy = false)
+        .then(() => { CloudStatusComponent.reloadBackend(this); });
     }
   }
 
@@ -54,17 +61,27 @@ export class CloudStatusComponent implements OnInit {
           this.collection.userCollection = data.userCollection;
         }
       }
-    }).then(() => { CloudStatusComponent.reloadBackend(this); }).then(() => {
+    }).then(() => { return CloudStatusComponent.reloadBackend(this); }).then(() => {
+      console.log("poupou");
       this.sent = true;
       this.sending = false;
+      this.lastLoad = new Date(this.collection.lastChanged);
     });
+  }
+
+  autoUpdate() {
+    if (this.autosave && !this.outdated) {
+      this.updateCollection();
+    }
   }
 
   loadCollection(): void {
     CloudStatusComponent.reloadBackend(this).then(() => {
       this.lib.replace(this.collection.userCollection);
       this.myStorage = this.lib.load();
+      this.myStorage.addChangeListener(() => this.autoUpdate());
       this.myStorageChange.emit(this.myStorage);
+      this.lastLoad = new Date(this.collection.lastChanged);
     });
   }
 
@@ -120,5 +137,17 @@ export class CloudStatusComponent implements OnInit {
 
   get name(): string {
     return localStorage.getItem("username");
+  }
+
+  get autosave(): boolean {
+    return localStorage.getItem("autosave") === "true";
+  }
+
+  set autosave(as: boolean) {
+    localStorage.setItem("autosave", as ? "true" : "false");
+  }
+
+  toggleAutosave() {
+    this.autosave = !this.autosave;
   }
 }

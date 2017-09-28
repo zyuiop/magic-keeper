@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<div *ngIf="auth.isAuthenticated() && collection && outdated" class="alert alert-warning" role="alert"><b>Local copy might be updated! </b>There is a saved version
+<div *ngIf="auth.isAuthenticated() && collection && outdated" class="alert alert-warning" role="alert"><b>Local copy might be outdated! </b>There is a saved version
 of this collection in the cloud that appears to be more recent than the one you are currently working on.<br/><br/>
 <b>What can I do?</b>
   <ul>
@@ -38,8 +38,17 @@ of this collection in the cloud that appears to be more recent than the one you 
     <button *ngIf="display" (click)="display = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
     <button *ngIf="!display" (click)="display = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
     Cloud Saving
-    <b *ngIf="collection && outdated" class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="top" title="Your local collection might be outdated"> </b>
-    <b *ngIf="auth.isAuthenticated() && collection && !outdated && notSaved" class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="top" title="Local collection not saved"> </b>
+
+    <div style="display: inline-block; float: right; margin-right: 10px;" *ngIf="autosave && !outdated">
+      <span *ngIf="sending" class="help-block"><img src="assets/loading.svg" height="12px" width="12px" /></span>
+      <b *ngIf="sent" class="glyphicon glyphicon-saved" title="All changes saved"></b>
+      <b *ngIf="!sent && !sending" class="glyphicon glyphicon-flash" title="Autosave enabled"></b>
+    </div>
+
+    <div style="display: inline-block; float: right; margin-right: 10px;">
+      <b *ngIf="collection && outdated" class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="top" title="Your local collection might be outdated"> </b>
+      <b *ngIf="auth.isAuthenticated() && collection && !outdated && notSaved" class="glyphicon glyphicon-warning-sign" data-toggle="tooltip" data-placement="top" title="Local collection not saved"> </b>
+    </div>
   </div>
   <div class="panel-body" *ngIf="display && hasName">
 
@@ -73,6 +82,17 @@ of this collection in the cloud that appears to be more recent than the one you 
             <button data-toggle="modal" data-target="#loadModal" class="btn btn-danger col-lg-12">Load Collection</button>
           </div>
         </div>
+
+      <div class="form-group" *ngIf="collection">
+          <label class="control-label col-lg-3">Enable autosave <span class="label label-warning">beta</span>: </label>
+          <div class="col-lg-3">
+            <button *ngIf="!outdated && autosave" (click)="toggleAutosave()" class="btn btn-danger col-lg-12">Disable Autosave</button>
+            <button *ngIf="!outdated && !autosave" (click)="toggleAutosave()" class="btn btn-success col-lg-12">Enable Autosave</button>
+            <button *ngIf="outdated" class="btn btn-default col-lg-12" disabled="disabled">(Outdated Data)</button>
+          </div>
+          <span *ngIf="!outdated" class="help-block">When autosave is enabled, your collection is saved at every change</span>
+          <span *ngIf="outdated" class="help-block">Autosave is disabled because your collection is outdated</span>
+      </div>
       </div>
   </div>
 

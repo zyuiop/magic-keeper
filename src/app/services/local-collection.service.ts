@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MagicOwnedCard} from "../types/magic-owned-card";
 import {MagicCard} from "../types/magic-card";
-import {CardStorage} from "./card-storage";
+import {CardStorage, ChangeListener} from "./card-storage";
 import {CardProvider} from "./card-provider";
 import {CardsLoaderService, PartialData} from "./cards-loader.service";
 
@@ -20,6 +20,8 @@ export class LocalCollectionService {
 }
 
 export class LocalStorage implements CardStorage, CardProvider {
+  private _changeListeners: Function[] = [];
+
   constructor(private _cards: PartialData<Map<number, MagicOwnedCard>>, private _saveDestination: string) {}
 
   /**
@@ -38,6 +40,10 @@ export class LocalStorage implements CardStorage, CardProvider {
 
     this.putCard(new MagicOwnedCard(card, amount, amountFoil));
     this.save();
+  }
+
+  addChangeListener(listener: Function) {
+    this._changeListeners.push(listener);
   }
 
   get cards(): Map<number, MagicOwnedCard> {
@@ -95,6 +101,12 @@ export class LocalStorage implements CardStorage, CardProvider {
   protected save(): void {
     localStorage.setItem(this._saveDestination, this.toString());
     localStorage.setItem(this._saveDestination + ".lastSave", new Date().toString());
+
+    console.log("save");
+
+    for (const listener of this._changeListeners) {
+      listener.call([]);
+    }
   }
 
   lastChange(): Date {

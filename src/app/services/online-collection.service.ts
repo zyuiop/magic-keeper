@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {MagicOwnedCard, MagicReducedOwnedCard} from "../types/magic-owned-card";
 import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "../types/magic-card";
-import {CardStorage} from "./card-storage";
+import {CardStorage, ChangeListener} from "./card-storage";
 import {CardProvider} from "./card-provider";
 import {CardsLoaderService, PartialData} from "./cards-loader.service";
 import {BackendService} from "./backend.service";
@@ -36,6 +36,9 @@ export class OnlineCardStorage implements CardStorage {
 
   lastChange(): Date {
     return new Date(this._lastChange);
+  }
+
+  addChangeListener(listener: Function) {
   }
 }
 

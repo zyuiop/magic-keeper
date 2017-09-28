@@ -5,7 +5,6 @@ import {MagicOwnedCard} from "../types/magic-owned-card";
  * Represents something that saves cards, either an API, a card list, a decks, a collection, a decks side, ...
  */
 export interface CardStorage {
-
   /**
    * Add a given amount of a given card
    * @param {MagicCard} card the card to add
@@ -40,4 +39,10 @@ export interface CardStorage {
   finishedLoading(): boolean;
 
   lastChange(): Date;
+
+  addChangeListener(listener: Function);
+}
+
+export interface ChangeListener {
+  onChange(changedStorage: CardStorage);
 }
