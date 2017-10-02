@@ -61,7 +61,7 @@ export class CardsLoaderService {
     const partial = new PartialDataImpl(map);
     let todo = 0;
 
-    if (stored !== null) {
+    if (stored !== null && stored.length > 0) {
       let counter = 0;
       const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
 
