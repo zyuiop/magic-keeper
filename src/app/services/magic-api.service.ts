@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import {MagicCard} from "../types/magic-card";
 import {MagicOwnedCard, MagicReducedOwnedCard} from "../types/magic-owned-card";
 import {isNull, isUndefined} from "util";
-import {CardProvider} from "./card-provider";
+import {CardProvider} from "../types/card-provider";
 
 @Injectable()
 export class MagicApiService implements CardProvider {

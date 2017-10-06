@@ -5,7 +5,7 @@ import {CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter
 import {
   Comparator
 } from "../types/sort";
-import {CardStorage} from "../services/card-storage";
+import {CardStorage} from "../types/card-storage";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import 'rxjs/add/operator/switchMap';
 import {

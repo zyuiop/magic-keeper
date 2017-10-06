@@ -1,4 +1,4 @@
-import {MagicCard} from "../types/magic-card";
+import {MagicCard} from "./magic-card";
 
 /**
  * Represents something that provides cards, either an API or a card list

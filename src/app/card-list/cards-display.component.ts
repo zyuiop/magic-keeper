@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
-import {CardStorage} from "../services/card-storage";
+import {CardStorage} from "../types/card-storage";
 import {Comparator} from "../types/sort";
 import {
   CardFilter, NumericFilter, SelectFilter, StringArrayFilter, StringFilter, MultiFieldStringFilter,

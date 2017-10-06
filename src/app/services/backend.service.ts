@@ -6,6 +6,9 @@ import {BackendCollection} from "../types/backend-collection";
 import {BackendProfile} from "../types/backend-profile";
 
 @Injectable()
+/**
+ * Provides mapping to the magic keeper backend
+ */
 export class BackendService {
   private _baseApiUrl = "https://magic.zyuiop.net/api";
   private _collectionUrl = this._baseApiUrl + "/collection";

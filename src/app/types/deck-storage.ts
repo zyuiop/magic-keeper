@@ -1,4 +1,4 @@
-import {MagicDeckInfo} from "../types/magic-deck-info";
+import {MagicDeckInfo} from "./magic-deck-info";
 import {MagicDeck} from "./magic-deck";
 
 /**

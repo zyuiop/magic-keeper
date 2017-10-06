@@ -2,8 +2,8 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MagicSet} from "../types/magic-set";
 import {MagicApiService} from "../services/magic-api.service";
 import {MagicCard} from "../types/magic-card";
-import {CardProvider} from "../services/card-provider";
-import {CardStorage} from "../services/card-storage";
+import {CardProvider} from "../types/card-provider";
+import {CardStorage} from "../types/card-storage";
 
 @Component({
   selector: 'app-card-searcher',

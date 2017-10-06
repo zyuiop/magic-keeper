@@ -17,6 +17,7 @@ import {OnlineCollectionService} from "./services/online-collection.service";
 import {CollectionModule} from "./collection/collection.module";
 import {PickUsernameComponent} from "./auth/pick-username.component";
 import {PageNotFoundComponent} from "./page-not-found.component";
+import {CloudSaverService} from "./services/cloud-saver.service";
 
 @NgModule({
   declarations: [
@@ -37,12 +38,13 @@ import {PageNotFoundComponent} from "./page-not-found.component";
     AppRoutingModule // must remain last !
   ],
   providers: [
-    MagicApiService,
     LocalCollectionService,
+    MagicApiService,
     AuthService,
     BackendService,
     CardsLoaderService,
-    OnlineCollectionService
+    OnlineCollectionService,
+    CloudSaverService
   ],
   bootstrap: [AppComponent]
 })

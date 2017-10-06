@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LocalDecksProviderService} from "./local-decks-provider.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
-import {MagicDeck} from "../services/magic-deck";
+import {MagicDeck} from "../types/magic-deck";
 
 @Component({
   templateUrl: 'deck.component.html'

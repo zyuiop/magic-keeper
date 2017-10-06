@@ -1,26 +1,64 @@
 import {Injectable} from '@angular/core';
 import {MagicOwnedCard} from "../types/magic-owned-card";
 import {MagicCard} from "../types/magic-card";
-import {CardStorage, ChangeListener} from "./card-storage";
-import {CardProvider} from "./card-provider";
+import {CardStorage, ChangeListener} from "../types/card-storage";
+import {CardProvider} from "../types/card-provider";
 import {CardsLoaderService, PartialData} from "./cards-loader.service";
+import {CloudSaverService} from "./cloud-saver.service";
 
 @Injectable()
 export class LocalCollectionService {
-  constructor(private loader: CardsLoaderService) {}
+  private _cached = new Map<string, LocalStorage>();
 
+  constructor(private loader: CardsLoaderService, private cloud: CloudSaverService) {}
+
+  /**
+   * Loads the cards corresponding to a key, returning cached cards if existing
+   * @param {string} key the key to load
+   * @returns {LocalStorage} the storage in which cards are stored when loaded
+   */
   load(key?: string): LocalStorage {
     key = (key == null ? "cards" : key);
-    return new LocalStorage(this.loader.loadFromStorage(key), key);
+
+    if (!this._cached.has(key)) {
+      this._cached.set(key, this.doLoad(key));
+    }
+
+    return this._cached.get(key);
   }
 
-  replace(cards: string): void {
-    localStorage.setItem("cards", cards);
+  /**
+   * Loads the cards corresponding to a key
+   * @param {string} key the key to load
+   * @returns {LocalStorage} the storage in which the cards are stored when loaded
+   */
+  private doLoad(key: string): LocalStorage {
+    const storage = new LocalStorage(this.loader.loadFromStorage(key), key);
+    storage.addChangeListener(stor => this.cloud.autoSave(stor)); // Cloud listener automatically added
+    storage.addChangeListener(stor => {
+      localStorage.setItem(key, stor.toString());
+      localStorage.setItem(key + ".lastSave", new Date().toString());
+    });
+    return storage;
+  }
+
+  /**
+   * Replace a locally stored collection string with an other one
+   * @param {string} cards the cards to put in place
+   * @param {string} key the key in which to store the collection
+   */
+  replace(cards: string, key?: string): void {
+    this.doReplace(cards, (key == null ? "cards" : key));
+  }
+
+  private doReplace(cards: string, key: string): void {
+    this._cached.delete(key); // invalidate the cache
+    localStorage.setItem(key, cards); // replace the value
   }
 }
 
 export class LocalStorage implements CardStorage, CardProvider {
-  private _changeListeners: Function[] = [];
+  private _changeListeners: ((storage: LocalStorage) => void)[] = [];
 
   constructor(private _cards: PartialData<Map<number, MagicOwnedCard>>, private _saveDestination: string) {}
 
@@ -39,10 +77,10 @@ export class LocalStorage implements CardStorage, CardProvider {
     }
 
     this.putCard(new MagicOwnedCard(card, amount, amountFoil));
-    this.save();
+    this.notifyUpdate();
   }
 
-  addChangeListener(listener: Function) {
+  addChangeListener(listener: ((storage: LocalStorage) => void)) {
     this._changeListeners.push(listener);
   }
 
@@ -72,7 +110,7 @@ export class LocalStorage implements CardStorage, CardProvider {
     } else {
       throw new Error("This card is not in the decks !");
     }
-    this.save();
+    this.notifyUpdate();
   }
 
   private putCard(card: MagicOwnedCard): void {
@@ -98,14 +136,9 @@ export class LocalStorage implements CardStorage, CardProvider {
     return toStore.join(";");
   }
 
-  protected save(): void {
-    localStorage.setItem(this._saveDestination, this.toString());
-    localStorage.setItem(this._saveDestination + ".lastSave", new Date().toString());
-
-    console.log("save");
-
+  protected notifyUpdate(): void {
     for (const listener of this._changeListeners) {
-      listener.call([]);
+      listener(this);
     }
   }
 

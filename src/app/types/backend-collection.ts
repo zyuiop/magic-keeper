@@ -1,8 +1,10 @@
 
 export class BackendCollection {
-  userId: string;
   username?: string;
+
   userCollection: string;
-  public = false;
   lastChanged: string;
+  revision: string; // The UUID of the last revision
+
+  public = false;
 }

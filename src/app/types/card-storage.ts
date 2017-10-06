@@ -1,5 +1,5 @@
-import {MagicCard} from "../types/magic-card";
-import {MagicOwnedCard} from "../types/magic-owned-card";
+import {MagicCard} from "./magic-card";
+import {MagicOwnedCard} from "./magic-owned-card";
 
 /**
  * Represents something that saves cards, either an API, a card list, a decks, a collection, a decks side, ...

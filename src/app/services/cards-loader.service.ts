@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {MagicOwnedCard, MagicReducedOwnedCard} from "../types/magic-owned-card";
 import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "../types/magic-card";
-import {CardStorage} from "./card-storage";
-import {CardProvider} from "./card-provider";
+import {CardStorage} from "../types/card-storage";
+import {CardProvider} from "../types/card-provider";
 import {Observable} from "rxjs/Observable";
 
 export interface PartialData<T> {

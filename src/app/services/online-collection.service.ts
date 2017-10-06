@@ -2,11 +2,15 @@ import {Injectable} from '@angular/core';
 import {MagicOwnedCard, MagicReducedOwnedCard} from "../types/magic-owned-card";
 import {MagicApiService} from "./magic-api.service";
 import {MagicCard} from "../types/magic-card";
-import {CardStorage, ChangeListener} from "./card-storage";
-import {CardProvider} from "./card-provider";
+import {CardStorage, ChangeListener} from "../types/card-storage";
+import {CardProvider} from "../types/card-provider";
 import {CardsLoaderService, PartialData} from "./cards-loader.service";
 import {BackendService} from "./backend.service";
 
+/**
+ * Represents a card storage in which the cards are loaded from the backend
+ * Storages loaded this way cannot be modified
+ */
 export class OnlineCardStorage implements CardStorage {
   constructor(private cards: PartialData<Map<number, MagicOwnedCard>>, private _username: string, private _lastChange: string) {};
 

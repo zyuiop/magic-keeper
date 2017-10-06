@@ -1,6 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
-import {CardStorage} from "../services/card-storage";
+import {CardStorage} from "../types/card-storage";
 
 @Component({
   selector: 'app-info-list-display',

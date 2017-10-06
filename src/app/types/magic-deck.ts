@@ -1,4 +1,4 @@
-import {MagicDeckInfo} from "../types/magic-deck-info";
+import {MagicDeckInfo} from "./magic-deck-info";
 import {CardStorage} from "./card-storage";
 
 export class MagicDeck {
