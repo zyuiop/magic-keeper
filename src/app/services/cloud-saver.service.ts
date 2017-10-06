@@ -81,7 +81,7 @@ export class CloudSaverService {
   }
 
   autoSave(storage: CardStorage): Promise<UpdateResponse> {
-    if (this.autosave && !this.isRemoteOutdated(storage)) {
+    if (this.autosave && !this.isLocalOutdated() && this.isRemoteOutdated(storage)) {
       return this.updateCollection(storage);
     }
     return Promise.resolve(null);
