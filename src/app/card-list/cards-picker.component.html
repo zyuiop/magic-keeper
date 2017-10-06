@@ -1,0 +1,24 @@
+<div *ngIf="storage">
+
+  <div *ngIf="!storage.finishedLoading()" class="loading">
+    <h2>Loading collection... <img src="assets/loading.svg" height="28px" width="28px"></h2>
+  </div>
+
+  <app-filters-display [filters]="filters"></app-filters-display>
+  <app-sort-display [comparator]="comparator"></app-sort-display>
+
+  <div *ngIf="cards.length === 0" class="panel panel-danger">
+    <div class="panel-heading">No card found</div>
+    <div class="panel-body">
+      <p>There is no card in your collection matching these filters</p>
+    </div>
+  </div>
+  <div *ngIf="cards.length !== 0">
+    <p><i>{{matching}} cards found matching these filters</i></p>
+    <app-gallery-display *ngIf="display === 'gallery'" [cards]="cards" [storage]="storage" [pickFunction]="onClick"
+                         [cardSplitter]="splitCards"></app-gallery-display>
+  </div>
+</div>
+
+
+

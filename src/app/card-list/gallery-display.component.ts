@@ -10,4 +10,14 @@ export class GalleryDisplayComponent {
   @Input() cards: MagicOwnedCard[];
   @Input() storage: CardStorage;
   detailedCard: MagicOwnedCard;
+  @Input() pickFunction = (card: MagicOwnedCard) => this.detailedCard = card;
+  @Input() cardSplitter = function(card: MagicOwnedCard): MagicOwnedCard[] { return [card]; };
+
+  onClick(card: MagicOwnedCard) {
+    this.pickFunction(card);
+  }
+
+  get splittedCards(): MagicOwnedCard[][] {
+    return this.cards.map(card => this.cardSplitter(card));
+  }
 }

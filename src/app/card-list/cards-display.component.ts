@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
 import {CardStorage} from "../services/card-storage";
 import {Comparator} from "../types/sort";
