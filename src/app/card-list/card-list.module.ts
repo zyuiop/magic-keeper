@@ -6,9 +6,10 @@ import {StandardDisplayComponent} from "./standard-display.component";
 import {NgModule} from "@angular/core";
 import {CardsDisplayComponent} from "./cards-display.component";
 import {SortDisplayComponent} from "./sort-display.component";
-import {FilterDisplayComponent} from "./filter-display.component";
+import {FiltersDisplayComponent} from "./filters-display.component";
 import {ProxyPipe} from "../card-display/proxy.pipe";
 import {CardDisplayModule} from "../card-display/card-display.module";
+import {FilterDisplayComponent} from "./filter-display.component";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {CardDisplayModule} from "../card-display/card-display.module";
     GalleryDisplayComponent,
     InfoListDisplayComponent,
     CardsDisplayComponent,
+    FiltersDisplayComponent,
     FilterDisplayComponent,
     SortDisplayComponent,
   ],

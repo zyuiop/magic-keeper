@@ -2,6 +2,7 @@ import {MagicOwnedCard} from "./magic-owned-card";
 import {getInternalValue} from "./utils";
 import {isUndefined} from "util";
 
+
 export abstract class CardFilter<T>  {
   protected _field: string;
   displayName: string;
@@ -14,6 +15,7 @@ export abstract class CardFilter<T>  {
   }
 
   abstract check(card: MagicOwnedCard): boolean;
+
 }
 
 export class NumericFilter extends CardFilter<number> {
@@ -121,3 +123,18 @@ export class StringArrayFilter extends CardFilter<string> {
     return false;
   }
 }
+
+export const FILTERS: CardFilter<any>[] = [
+  new NumericFilter("amount", "Cards amount", 0),
+  new NumericFilter("amountFoil", "Foil cards amount", 0),
+  new NumericFilter("card.cmc", "Converted mana cost", 0),
+  new MultiFieldStringFilter("General search", null, ["card.name", "card.text", "card.flavor", "card.type"]),
+  new StringFilter("card.name", "Card name", null),
+  new StringFilter("card.text", "Card text", null),
+  new StringFilter("card.flavor", "Card flavortext", null),
+  new StringFilter("card.setName", "Set name", null),
+  new StringFilter("card.rarity", "Rarity", null),
+  new StringFilter("card.type", "Type", null),
+  new StringArrayFilter("card.colors", "Color", null),
+  new SelectFilter("card.layout", "Layout", new Map([["normal", "Normal"], ["aftermath", "Aftermath"]]), null),
+];

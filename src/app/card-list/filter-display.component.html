@@ -1,14 +1,6 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <button *ngIf="display" (click)="display = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
-    <button *ngIf="!display" (click)="display = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
-    Filter</div>
-  <div class="panel-body" *ngIf="display">
-    <div class="form-horizontal">
-      <div class="form-group" *ngFor="let filter of filters">
-        <label class="col-sm-3 control-label">{{filter.displayName}}</label>
-        <div class="col-sm-1" *ngIf="isNumeric(filter)">
-          <select class="form-control" [(ngModel)]="numericFilter(filter).comparator">
+ <label class="col-sm-3 control-label">{{filter.displayName}}</label>
+        <div class="col-sm-1" *ngIf="numeric">
+          <select class="form-control" [(ngModel)]="asNumeric.comparator">
             <option value=">=">>=</option>
             <option value=">">></option>
             <option value="<"><</option>
@@ -17,19 +9,15 @@
             <option value="!=">!=</option>
           </select>
         </div>
-        <div class="col-sm-6" *ngIf="isNumeric(filter)">
+        <div class="col-sm-6" *ngIf="numeric">
           <input class="form-control" [(ngModel)]="filter.value" type="number">
         </div>
-        <div class="col-sm-7" *ngIf="!isNumeric(filter) && !isSelect(filter)">
+        <div class="col-sm-7" *ngIf="!numeric && !select">
           <input class="form-control" [(ngModel)]="filter.value">
         </div>
-        <div class="col-sm-7" *ngIf="isSelect(filter)">
+        <div class="col-sm-7" *ngIf="select">
           <select class="form-control" [(ngModel)]="filter.value">
-            <option value="{{null}}"></option>
-            <option *ngFor="let opt of selectFilter(filter).values.entries()" value="{{opt[0]}}">{{opt[1]}}</option>
+            <option value="{{null}}">---</option>
+            <option *ngFor="let opt of asSelect.values.entries()" value="{{opt[0]}}">{{opt[1]}}</option>
           </select>
         </div>
-      </div>
-    </div>
-  </div>
-</div>

@@ -6,22 +6,21 @@ import {CardFilter, NumericFilter, SelectFilter} from "../types/card-filter";
   templateUrl: 'filter-display.component.html'
 })
 export class FilterDisplayComponent {
-  display: false;
-  @Input() filters: CardFilter<any>[];
+  @Input() filter: CardFilter<any>;
 
-  isNumeric(filter: CardFilter<any>): boolean {
-    return filter instanceof NumericFilter;
+  get numeric(): boolean {
+    return this.filter instanceof NumericFilter;
   }
 
-  isSelect(filter: CardFilter<any>): boolean {
-    return filter instanceof SelectFilter;
+  get select(): boolean {
+    return this.filter instanceof SelectFilter;
   }
 
-  numericFilter(filter: CardFilter<any>): NumericFilter {
-    return filter as NumericFilter;
+  get asNumeric(): NumericFilter {
+    return this.filter as NumericFilter;
   }
 
-  selectFilter(filter: CardFilter<any>): SelectFilter {
-    return filter as SelectFilter;
+  get asSelect(): SelectFilter {
+    return this.filter as SelectFilter;
   }
 }
