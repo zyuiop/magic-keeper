@@ -8,5 +8,4 @@ import {CardFilter, NumericFilter, SelectFilter} from "../types/card-filter";
 export class FiltersDisplayComponent {
   display = false;
   @Input() filters: CardFilter<any>[];
-  @Input() activeFilters: Map<string, CardFilter<any>[]>;
 }
