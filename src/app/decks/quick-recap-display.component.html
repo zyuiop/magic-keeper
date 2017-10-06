@@ -1,0 +1,11 @@
+<div *ngFor="let entry of sorted">
+  <b>{{entry.type}}</b>
+  <ul>
+    <li *ngFor="let card of entry.cards"><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span>
+      {{card.card.name}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.name}})</small> <b> * {{card.amount + card.amountFoil}}</b>
+
+      <a *ngIf="card.amount > 0" (click)="removeOne(card, false)">[-1]</a>
+      <a *ngIf="card.amountFoil > 0" (click)="removeOne(card, true)">[-1 foil]</a>
+    </li>
+  </ul>
+</div>

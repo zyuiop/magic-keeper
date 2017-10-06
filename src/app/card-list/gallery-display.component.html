@@ -1,6 +1,14 @@
-<div *ngFor="let subList of splittedCards" style="display: inline-block;">
-<div *ngFor="let card of subList"  style="display: inline-block; margin: 1.5px" (click)="onClick(card)">
-  <img src="{{card.card.imageUrl | proxy}}" *ngIf="detailedCard != card" style="display: inline-block">
+<div *ngFor="let card of splittedCards"  style="display: inline-block; margin: 1.5px" (click)="onClick(card)">
+
+  <div style="position: relative;">
+    <span style="position: absolute; bottom: 10px; left: 10px; ">
+      <span class="label label-primary" *ngIf="card.amount > 0">{{card.amount}}</span>
+      <span class="label label-warning" *ngIf="card.amountFoil > 0">{{card.amountFoil}} foil</span>
+    </span>
+    <img src="{{card.card.imageUrl | proxy}}" *ngIf="detailedCard != card" style="display: inline-block; z-index: -1;">
+  </div>
+
+
   <span *ngIf="detailedCard == card" style="width: 223px; height: 310.99px; border-radius: 10px; border: 2px solid; padding-left: 3px; vertical-align: middle; display: inline-block;">
     <app-card-summary [card]="detailedCard.card" [reducedInfo]="true"></app-card-summary>
     <p>
@@ -11,5 +19,4 @@
       <b>Foil :</b> <app-card-qty-display [card]="card" [foil]="true" [storage]="storage"></app-card-qty-display>
     </p>
   </span>
-</div>
 </div>

@@ -1,3 +1,19 @@
-<app-cards-picker></app-cards-picker>
+<div *ngIf="deck">
+  <div class="row">
+    <h1>Editing: {{deck.info.name}}</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Pick cards</h2>
+      <app-cards-picker [storage]="storage" [targetStorage]="deck.cards"></app-cards-picker>
+    </div>
+    <div class="col-md-4">
+      <h2>Current deck state <small>({{deckCount}} cards)</small></h2>
+      <app-quick-recap-display [cards]="deck.cards.getCards()" [cardStorage]="storage" [deckStorage]="deck.cards"></app-quick-recap-display>
+      <hr/>
+    </div>
+  </div>
+
+</div>
 
 <app-collection-loading *ngIf="!deck" [error]="error"></app-collection-loading>

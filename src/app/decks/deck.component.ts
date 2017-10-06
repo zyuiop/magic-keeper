@@ -2,38 +2,31 @@ import {Component, OnInit} from '@angular/core';
 import {LocalDecksProviderService} from "./local-decks-provider.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {MagicDeck} from "../types/magic-deck";
+import {DeckViewerComponent} from "./deck-viewer.component";
+import {LocalCollectionService, LocalStorage} from "../services/local-collection.service";
+import {CardStorage} from "../types/card-storage";
 
 @Component({
   templateUrl: 'deck.component.html'
 })
-export class DeckComponent implements OnInit {
-  error: string = null; // For loading errors only
-  deck: MagicDeck = null;
+export class DeckComponent extends DeckViewerComponent implements OnInit {
+  storage: CardStorage;
 
-  constructor(private local: LocalDecksProviderService, private route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    this.route.paramMap
-      .subscribe((params: ParamMap) => {
-        if (params.has("user") && params.has("id")) {
-          this.loadDeck(params.get("user"), +params.get("id"));
-        } else {
-          this.error = "missing url";
-        }
-      });
+  constructor(local: LocalDecksProviderService, route: ActivatedRoute,
+              private localStorage: LocalCollectionService) {
+    super(local, route);
   }
 
-  private loadDeck(user: string, deck: number): void {
-    if (user.toLowerCase() === "my") {
-      this.deck = this.local.getDeck(deck);
+  get deckCount() {
+    let num = 0;
+    this.deck.cards.getCards().forEach(c => num += c.amount + c.amountFoil);
+    return num;
+  }
 
-      if (this.deck === null) {
-        this.error = "Invalid deck id";
-      }
+  ngOnInit(): void {
+    super.ngOnInit();
 
-      return;
-    } else {
-
-    }
+    // Load own deck
+    this.storage = this.localStorage.load();
   }
 }

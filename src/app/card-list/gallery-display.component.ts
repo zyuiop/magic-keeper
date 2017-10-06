@@ -17,7 +17,9 @@ export class GalleryDisplayComponent {
     this.pickFunction(card);
   }
 
-  get splittedCards(): MagicOwnedCard[][] {
-    return this.cards.map(card => this.cardSplitter(card));
+  get splittedCards(): MagicOwnedCard[] {
+    const cards: MagicOwnedCard[] = [];
+    this.cards.forEach(card => this.cardSplitter(card).forEach(c => cards.push(c)));
+    return cards;
   }
 }

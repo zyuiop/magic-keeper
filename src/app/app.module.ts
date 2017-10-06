@@ -18,6 +18,7 @@ import {CollectionModule} from "./collection/collection.module";
 import {PickUsernameComponent} from "./auth/pick-username.component";
 import {PageNotFoundComponent} from "./page-not-found.component";
 import {CloudSaverService} from "./services/cloud-saver.service";
+import {DecksModule} from "./decks/decks.module";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import {CloudSaverService} from "./services/cloud-saver.service";
     CardListModule,
     AuthModule,
     CollectionModule,
-
+    DecksModule,
 
     AppRoutingModule // must remain last !
   ],

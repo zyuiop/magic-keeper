@@ -20,10 +20,16 @@ import {CardsDisplayComponent} from "./cards-display.component";
 export class CardsPickerComponent extends CardsDisplayComponent {
   @Input() targetStorage: CardStorage;
 
+  fOnClick = (card: MagicOwnedCard) => this.onClick(card);
+  fSplitCards = (card: MagicOwnedCard) => this.splitCards(card);
+
   onClick(card: MagicOwnedCard) {
+    console.log(this.targetStorage);
+
     this.targetStorage.addCard(card.card, card.amount > 0 ? 1 : 0, card.amountFoil > 0 ? 1 : 0);
     this.storage.removeCard(card.card, card.amount > 0 ? 1 : 0, card.amountFoil > 0 ? 1 : 0);
   }
+
 
   splitCards(card: MagicOwnedCard) {
     if (card.amountFoil > 0 && card.amount > 0) {

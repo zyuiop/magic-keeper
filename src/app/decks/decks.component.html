@@ -1,8 +1,45 @@
-<div *ngIf="cards">
+<div *ngIf="decks">
   <div class="row">
     <h1 class="col-sm-9" style="display: inline-block;">{{title}}</h1>
   </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">Decks list</div>
+        <div class="panel-body">
 
-  <table class=""
+          <table class="table table-stripped">
+            <tr>
+              <th>Deck name</th>
+              <th>Actions</th>
+            </tr>
+
+            <tr *ngFor="let deck of decks">
+              <td><a routerLink="/decks/{{user}}/{{deck.id}}">{{deck.name}}</a></td>
+              <td>
+                <a routerLink="/decks/{{user}}/{{deck.id}}" class="btn btn-success btn-xs"><b class="glyphicon glyphicon-eye-open"></b></a>
+                <a *ngIf="modifiable" routerLink="/decks/{{user}}/{{deck.id}}/edit" class="btn btn-primary btn-xs"><b class="glyphicon glyphicon-pencil"></b></a>
+                <a *ngIf="modifiable" (click)="deleteDeck(deck)" class="btn btn-danger btn-xs"><b class="glyphicon glyphicon-remove"></b></a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">Create a new deck</div>
+        <div class="panel-body"><form class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="deckName">Name of the deck</label>
+            <input #deckName type="text" class="form-control" id="deckName" placeholder="Deck name">
+          </div>
+          <button (click)="create(deckName.value)" class="btn btn-success">Create</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<app-collection-loading *ngIf="!cards" [error]="error"></app-collection-loading>
+<app-collection-loading *ngIf="!decks" [error]="error"></app-collection-loading>

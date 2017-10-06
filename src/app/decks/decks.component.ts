@@ -10,6 +10,7 @@ export class DecksComponent implements OnInit {
   error: string = null; // For loading errors only
   decks: MagicDeckInfo[] = null;
   title: string = null;
+  user: string = null;
 
   constructor(private local: LocalDecksProviderService, private route: ActivatedRoute) {}
 
@@ -17,20 +18,33 @@ export class DecksComponent implements OnInit {
     this.route.paramMap
       .subscribe((params: ParamMap) => {
         if (params.has("user")) {
-          this.loadDecks(params.get("user"));
+          this.user = params.get("user");
+          this.loadDecks();
         } else {
           this.error = "missing url";
         }
       });
   }
 
-  private loadDecks(user: string): void {
-    if (user.toLowerCase() === "my") {
+  get modifiable() {
+    return this.user.toLowerCase() === "my";
+  }
+
+  deleteDeck(info: MagicDeckInfo) {
+    this.local.deleteDeck(info.id);
+  }
+
+  create(name: string) {
+    this.local.createDeckByName(name);
+  }
+
+  private loadDecks(): void {
+    if (this.user.toLowerCase() === "my") {
       this.title = "Decks";
       this.decks = this.local.decks;
       return;
     } else {
-      this.title = user + "'s decks";
+      this.title = this.user + "'s decks";
     }
   }
 }

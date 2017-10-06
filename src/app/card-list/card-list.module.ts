@@ -27,7 +27,7 @@ import {CardsPickerComponent} from "./cards-picker-component";
     BrowserModule, FormsModule, CardDisplayModule
   ],
   exports: [
-    CardsDisplayComponent, CardsPickerComponent, ProxyPipe
+    CardsDisplayComponent, CardsPickerComponent
   ]
 })
 export class CardListModule { }

@@ -62,7 +62,6 @@ export class CloudSaverService {
   get lastRevision() {
     return localStorage.getItem("cards.lastRevision");
   }
-
   /**
    * The last saved date is used to check if the server is up to date with the client
    * @param {Date} lastSaved

@@ -15,8 +15,8 @@
   </div>
   <div *ngIf="cards.length !== 0">
     <p><i>{{matching}} cards found matching these filters</i></p>
-    <app-gallery-display *ngIf="display === 'gallery'" [cards]="cards" [storage]="storage" [pickFunction]="onClick"
-                         [cardSplitter]="splitCards"></app-gallery-display>
+    <app-gallery-display [cards]="cards" [storage]="storage" [pickFunction]="fOnClick"
+                         [cardSplitter]="fSplitCards"></app-gallery-display>
   </div>
 </div>
 

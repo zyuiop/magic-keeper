@@ -1,0 +1,7 @@
+<div *ngIf="deck">
+  <h1>{{deck.info.name}} <small>by {{user === "my" ? "you" : user}}</small></h1>
+
+  <app-cards-display [storage]="deck.cards"></app-cards-display>
+</div>
+
+<app-collection-loading *ngIf="!deck" [error]="error"></app-collection-loading>
