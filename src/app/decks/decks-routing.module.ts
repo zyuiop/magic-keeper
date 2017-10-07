@@ -6,8 +6,8 @@ import {DeckViewerComponent} from "./deck-viewer.component";
 
 const routes: Routes = [
   { path: 'decks/:user', component: DecksComponent },
-  { path: 'decks/:user/:id', component: DeckViewerComponent },
-  { path: 'decks/:user/:id/edit', component: DeckComponent },
+  { path: 'deck/:id', component: DeckViewerComponent },
+  { path: 'deck/:id/edit', component: DeckComponent },
 ];
 
 @NgModule({

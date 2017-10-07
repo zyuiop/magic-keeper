@@ -6,14 +6,15 @@ import {CollectionLoadingModule} from "../collection-loading/collection-loading.
 import {BrowserModule} from "@angular/platform-browser";
 import {CardListModule} from "../card-list/card-list.module";
 import {DeckViewerComponent} from "./deck-viewer.component";
-import {LocalDecksProviderService} from "./local-decks-provider.service";
+import {DecksProviderService} from "./decks-provider.service";
 import {QuickRecapDisplayComponent} from "./quick-recap-display.component";
 import {ReplaceManaPipe} from "../card-display/replacemana.pipe";
 import {CardDisplayModule} from "../card-display/card-display.module";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [DecksComponent, DeckComponent, DeckViewerComponent, QuickRecapDisplayComponent],
-  imports: [BrowserModule, DecksRoutingModule, CollectionLoadingModule, CardListModule, CardDisplayModule],
-  providers: [LocalDecksProviderService]
+  imports: [BrowserModule, DecksRoutingModule, CollectionLoadingModule, CardListModule, CardDisplayModule, FormsModule],
+  providers: [DecksProviderService]
 })
 export class DecksModule {}

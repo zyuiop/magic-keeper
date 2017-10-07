@@ -1,11 +1,24 @@
-<div *ngFor="let entry of sorted">
-  <b>{{entry.type}}</b>
-  <ul>
-    <li *ngFor="let card of entry.cards"><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span>
-      {{card.card.name}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.name}})</small> <b> * {{card.amount + card.amountFoil}}</b>
+<table>
+  <tr>
+    <th>No</th>
+    <th>Card Name</th>
+    <th>Mana Cost</th>
+    <th *ngIf="(deckStorage && deckStorage.allowUpdate())"></th>
+  </tr>
 
-      <a *ngIf="card.amount > 0" (click)="removeOne(card, false)">[-1]</a>
-      <a *ngIf="card.amountFoil > 0" (click)="removeOne(card, true)">[-1 foil]</a>
-    </li>
-  </ul>
-</div>
+  <tbody *ngFor="let entry of sorted">
+    <tr>
+      <td [attr.colspan]="(deckStorage && deckStorage.allowUpdate()) ? 4 : 3"><h5><b>{{entry.title}}</b></h5></td>
+    </tr>
+
+    <tr *ngFor="let card of entry.cards">
+      <td>{{card.amount + card.amountFoil}}</td>
+      <td>{{card.card.name}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.name}})</small></td>
+      <td><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span></td>
+      <td *ngIf="deckStorage && deckStorage.allowUpdate()">
+        <a *ngIf="card.amount > 0" (click)="removeOne(card, false)">[-1]</a>
+        <a *ngIf="card.amountFoil > 0" (click)="removeOne(card, true)">[-1foil]</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

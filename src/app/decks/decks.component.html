@@ -1,25 +1,43 @@
+<div class="alert alert-warning" role="alert"><b>Beware! Alpha version </b><br>
+  <p>This feature is very unstable and might cause multiple bugs. Please consider the following points before using it.</p>
+  <ul>
+    <li>When a card is added to a deck, it is removed from your library. </li>
+    <li>When a card is removed from a deck, it is added to your library. </li>
+    <li>It is recommended to enable autosave when using this feature, so that the library changes are saved online automatically. </li>
+    <li>Decks only work online, so you have to be connected to create one. </li>
+    <li><b>Don't modify your list in two separate tabs!!!!</b> This includes updating your list from the Collection page
+    <b>AS WELL AS</b> from the decks.</li>
+    <li><b>If you use multiple tabs, please **RELOAD** the pages after modifying your list in any way</b></li>
+  </ul>
+</div>
+
 <div *ngIf="decks">
   <div class="row">
     <h1 class="col-sm-9" style="display: inline-block;">{{title}}</h1>
   </div>
   <div class="row">
-    <div class="col-md-8">
+    <div [class.col-md-8]="modifiable">
       <div class="panel panel-default">
         <div class="panel-heading">Decks list</div>
         <div class="panel-body">
 
           <table class="table table-stripped">
             <tr>
+              <th *ngIf="modifiable" ></th>
               <th>Deck name</th>
               <th>Actions</th>
             </tr>
 
             <tr *ngFor="let deck of decks">
-              <td><a routerLink="/decks/{{user}}/{{deck.id}}">{{deck.name}}</a></td>
+              <td style="max-width: 10%;" *ngIf="modifiable" >
+                <span [class.label-success]="deck.public" [class.label-danger]="!deck.public" class="label">{{deck.public ? "Public" : "Private"}}</span>
+              </td>
               <td>
-                <a routerLink="/decks/{{user}}/{{deck.id}}" class="btn btn-success btn-xs"><b class="glyphicon glyphicon-eye-open"></b></a>
-                <a *ngIf="modifiable" routerLink="/decks/{{user}}/{{deck.id}}/edit" class="btn btn-primary btn-xs"><b class="glyphicon glyphicon-pencil"></b></a>
-                <a *ngIf="modifiable" (click)="deleteDeck(deck)" class="btn btn-danger btn-xs"><b class="glyphicon glyphicon-remove"></b></a>
+                <a routerLink="/deck/{{deck._id}}">{{deck.name}}</a>
+              </td>
+              <td>
+                <a routerLink="/deck/{{deck._id}}" class="btn btn-success btn-xs"><b class="glyphicon glyphicon-eye-open"></b></a>
+                <a *ngIf="modifiable" routerLink="/deck/{{deck._id}}/edit" [class.btn-disabled]="network" class="btn btn-primary btn-xs"><b class="glyphicon glyphicon-pencil"></b></a>
               </td>
             </tr>
           </table>
@@ -27,16 +45,16 @@
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div *ngIf="modifiable" class="col-md-4">
       <div class="panel panel-default">
         <div class="panel-heading">Create a new deck</div>
-        <div class="panel-body"><form class="form-inline">
+        <div class="panel-body"><div class="form-inline">
           <div class="form-group">
             <label class="sr-only" for="deckName">Name of the deck</label>
-            <input #deckName type="text" class="form-control" id="deckName" placeholder="Deck name">
+            <input #deckName (keydown.enter)="create(deckName.value)" type="text" class="form-control" id="deckName" placeholder="Deck name">
           </div>
-          <button (click)="create(deckName.value)" class="btn btn-success">Create</button>
-        </form>
+          <button (click)="create(deckName.value)" [class.btn-disabled]="network" class="btn btn-success">Create</button>
+        </div>
         </div>
       </div>
     </div>

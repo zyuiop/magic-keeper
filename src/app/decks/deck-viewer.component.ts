@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {LocalDecksProviderService} from "./local-decks-provider.service";
+import {DecksProviderService} from "./decks-provider.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {MagicDeck} from "../types/magic-deck";
+import {Response} from "@angular/http";
 
 @Component({
   templateUrl: 'deck-viewer.component.html'
@@ -9,17 +10,15 @@ import {MagicDeck} from "../types/magic-deck";
 export class DeckViewerComponent implements OnInit {
   error: string = null; // For loading errors only
   deck: MagicDeck = null;
-  user: string = null;
-  id: number = null;
+  id: string = null;
 
-  constructor(protected local: LocalDecksProviderService, protected route: ActivatedRoute) {}
+  constructor(protected backend: DecksProviderService, protected route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.paramMap
       .subscribe((params: ParamMap) => {
-        if (params.has("user") && params.has("id")) {
-          this.user = params.get("user");
-          this.id = +params.get("id");
+        if (params.has("id")) {
+          this.id = params.get("id");
           this.loadDeck();
         } else {
           this.error = "missing url";
@@ -27,21 +26,26 @@ export class DeckViewerComponent implements OnInit {
       });
   }
 
-  get modifiable() {
-    return this.deck != null && this.deck.cards.allowUpdate() && this.user.toLowerCase() === "my";
+  protected shouldBeModifiable() {
+    return false;
   }
 
   private loadDeck(): void {
-    if (this.user.toLowerCase() === "my") {
-      this.deck = this.local.getDeck(this.id);
+    this.backend.getDeck(this.id).then(complete => {
+      this.deck = this.backend.load(complete, this.shouldBeModifiable());
 
-      if (this.deck === null) {
-        this.error = "Invalid deck id";
+      if (this.deck.cards.allowUpdate() !== this.shouldBeModifiable() && this.shouldBeModifiable() === false) {
+        this.deck = null;
+        throw new Error("Deck modificability is invalid (expected " + this.shouldBeModifiable() + ")");
       }
-
-      return;
-    } else {
-
-    }
+    }).catch(err => {
+      if (err instanceof Response) {
+        const error = err as Response;
+        this.error = error.json().message;
+      } else {
+        this.error = "unknown error";
+        console.log(err);
+      }
+    });;
   }
 }

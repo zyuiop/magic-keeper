@@ -11,6 +11,7 @@ import {ProxyPipe} from "../card-display/proxy.pipe";
 import {CardDisplayModule} from "../card-display/card-display.module";
 import {FilterDisplayComponent} from "./filter-display.component";
 import {CardsPickerComponent} from "./cards-picker-component";
+import {DisplaySelectorComponent} from "./display-selector.component";
 
 @NgModule({
   declarations: [
@@ -21,13 +22,14 @@ import {CardsPickerComponent} from "./cards-picker-component";
     FiltersDisplayComponent,
     FilterDisplayComponent,
     SortDisplayComponent,
-    CardsPickerComponent
+    CardsPickerComponent,
+    DisplaySelectorComponent
   ],
   imports: [
     BrowserModule, FormsModule, CardDisplayModule
   ],
   exports: [
-    CardsDisplayComponent, CardsPickerComponent
+    CardsDisplayComponent, CardsPickerComponent, DisplaySelectorComponent
   ]
 })
 export class CardListModule { }

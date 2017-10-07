@@ -5,7 +5,21 @@ import {Comparator, NumberCriteria, SortCriteria, TypeCriteria} from "../types/s
 
 @Component({
   selector: 'app-quick-recap-display',
-  templateUrl: './quick-recap-display.component.html'
+  templateUrl: './quick-recap-display.component.html',
+  styles: [
+    `
+      table {
+        display: table;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      td {
+        padding: 2px;
+        vertical-align: top;
+      }
+    `
+  ]
 })
 export class QuickRecapDisplayComponent {
   @Input() cards: MagicOwnedCard[];
@@ -13,7 +27,7 @@ export class QuickRecapDisplayComponent {
   @Input() deckStorage: CardStorage;
 
 
-  private _comparator = new Comparator([new TypeCriteria(), new NumberCriteria("cmc", "osef").reverse()]);
+  private _comparator = new Comparator([new TypeCriteria(), new NumberCriteria("card.cmc", "osef").reverse()]);
 
   removeOne(card: MagicOwnedCard, foil: boolean) {
     this.deckStorage.removeCard(card.card, foil ? 0 : 1, foil ? 1 : 0);
@@ -30,7 +44,7 @@ export class QuickRecapDisplayComponent {
       .forEach(card => {
         if (card.card.types[0] !== currentType) {
           if (currentType != null) {
-            ret.push({cards : current, type : currentType});
+            ret.push(new TypeWrapper(currentType, current));
           }
           currentType = card.card.types[0];
           current = [];
@@ -40,14 +54,36 @@ export class QuickRecapDisplayComponent {
       });
 
     if (currentType !== null) {
-      ret.push({cards : current, type : currentType});
+      ret.push(new TypeWrapper(currentType, current));
     }
 
     return ret;
   }
+
 }
 
 class TypeWrapper {
-  type: string;
-  cards: MagicOwnedCard[];
+  constructor(public type: string, public cards: MagicOwnedCard[]) {}
+
+  get title() {
+    const num = this.number;
+    let name = this.type;
+
+    // Plural
+    if (num > 1) {
+      if (name.substr(name.length - 1, 1) === "y" || name.substr(name.length - 1, 1) === "i") {
+        name = name.substr(0, name.length - 1) + "ies";
+      } else {
+        name += "s";
+      }
+    }
+
+    return name + " (" + num + ")";
+  }
+
+  get number() {
+    let acc = 0;
+    this.cards.forEach(c => acc += c.amountFoil + c.amount);
+    return acc;
+  }
 }

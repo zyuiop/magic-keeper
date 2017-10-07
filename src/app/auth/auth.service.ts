@@ -77,4 +77,11 @@ export class AuthService {
     return new Date().getTime() < expiresAt;
   }
 
+  public getUsername(): string {
+    return localStorage.getItem("username");
+  }
+
+  public isUser(name: string): boolean {
+    return this.isAuthenticated() && this.getUsername() === name;
+  }
 }

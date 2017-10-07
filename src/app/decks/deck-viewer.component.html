@@ -1,7 +1,22 @@
 <div *ngIf="deck">
-  <h1>{{deck.info.name}} <small>by {{user === "my" ? "you" : user}}</small></h1>
 
-  <app-cards-display [storage]="deck.cards"></app-cards-display>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <h1 class="col-sm-9">{{deck.info.name}} <small>by <a routerLink="/decks/{{deck.info.username}}">{{deck.info.username}}</a></small></h1>
+        <div class="col-sm-3"><app-display-selector #disp></app-display-selector></div>
+      </div>
+
+      <app-cards-display [storage]="deck.cards" [display]="disp.display"></app-cards-display>
+    </div>
+
+    <div class="col-md-4">
+      <h2>Cards Summary</h2>
+      <app-quick-recap-display [cards]="deck.cards.getCards()"></app-quick-recap-display>
+      <hr/>
+    </div>
+  </div>
+
 </div>
 
 <app-collection-loading *ngIf="!deck" [error]="error"></app-collection-loading>

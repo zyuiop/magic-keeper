@@ -1,5 +1,11 @@
 export class MagicDeckInfo {
-  id: number;
+  _id: string;
   name: string;
-  lastUpdate: Date;
+  lastChanged?: string;
+  public? = false;
+  username?: string;
+}
+
+export class MagicCompleteDeckInfo extends MagicDeckInfo {
+  cards: string;
 }
