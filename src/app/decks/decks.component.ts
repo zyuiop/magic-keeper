@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {MagicDeckInfo} from "../types/magic-deck-info";
-import {BackendService} from "../services/backend.service";
 import {Response} from "@angular/http";
 import {AuthService} from "../auth/auth.service";
 import {DecksProviderService} from "./decks-provider.service";

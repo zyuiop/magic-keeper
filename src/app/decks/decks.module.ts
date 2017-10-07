@@ -8,7 +8,6 @@ import {CardListModule} from "../card-list/card-list.module";
 import {DeckViewerComponent} from "./deck-viewer.component";
 import {DecksProviderService} from "./decks-provider.service";
 import {QuickRecapDisplayComponent} from "./quick-recap-display.component";
-import {ReplaceManaPipe} from "../card-display/replacemana.pipe";
 import {CardDisplayModule} from "../card-display/card-display.module";
 import {FormsModule} from "@angular/forms";
 
