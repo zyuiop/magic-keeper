@@ -10,46 +10,66 @@
       <app-cards-picker [storage]="storage" [targetStorage]="deck.cards"></app-cards-picker>
     </div>
     <div class="col-md-4">
-      <h2>Deck settings</h2>
-      <div class="form-inline">
+      <h3>Deck settings
+        <button *ngIf="settings.hidden" (click)="settings.hidden = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
+        <button *ngIf="!settings.hidden" (click)="settings.hidden = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
+      </h3>
+      <div #settings hidden class="form-horizontal">
         <div class="form-group">
-          <label class="sr-only" for="deckName">Name of the deck</label>
-          <input #deckName (keydown.enter)="rename(deckName.value)" [value]="deck.info.name" type="text" class="form-control" id="deckName" placeholder="Deck name">
+          <label class="control-label col-lg-3" for="deckName">Rename:</label>
+          <div class="col-lg-9 form-inline">
+            <input #deckName (keydown.enter)="rename(deckName.value)" [value]="deck.info.name" type="text" class="form-control" id="deckName" placeholder="Deck name">
+            <button (click)="rename(deckName.value)" class="btn btn-success">Rename</button>
+          </div>
         </div>
-        <button (click)="rename(deckName.value)" class="btn btn-success">Rename</button>
-      </div>
-      <div class="form-inline">
-        <select #privacy class="form-control" [value]="deck.info.public" (change)="updatePrivacy(privacy.value)" id="set-selector">
-          <option value="true">Public</option>
-          <option value="false">Private</option>
-        </select>
+        <div class="form-group">
+          <label class="control-label col-lg-3" for="deckName">Privacy:</label>
+          <div class="col-lg-9">
+            <select #privacy class="form-control" [value]="deck.info.public" (change)="updatePrivacy(privacy.value)" id="set-selector">
+              <option value="true">Public</option>
+              <option value="false">Private</option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="deck.cards.finishedLoading()" class="form-group">
+          <label class="control-label col-lg-3" for="deckName">Delete:</label>
+          <div class="col-lg-9">
+            <button class="btn btn-danger col-lg-12" (click)="delete()">Delete deck</button>
+          </div>
+        </div>
       </div>
       <hr/>
-      <h2>Current deck state <small>({{deckCount}} cards)</small></h2>
-      <app-quick-recap-display [cards]="deck.cards.getCards()" [cardStorage]="storage" [deckStorage]="deck.cards"></app-quick-recap-display>
-      <button *ngIf="deck.cards.getCards().length === 0 && deck.cards.finishedLoading()" class="btn btn-danger" (click)="delete()">Delete deck</button>
-      <hr/>
-      <h2>Snapshots</h2>
+      <h3>Snapshots
+        <button *ngIf="snapshotsDiv.hidden" (click)="snapshotsDiv.hidden = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
+        <button *ngIf="!snapshotsDiv.hidden" (click)="snapshotsDiv.hidden = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
+      </h3>
 
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Created</th>
-          <th>Action</th>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <label class="sr-only" for="snapName">Name of the deck</label>
-            <input #snapName (keydown.enter)="makeSnapshot(snapName.value); snapName.value = ''" class="form-control input-sm" id="snapName" placeholder="Snapshot name">
-          </td>
-          <td><button (click)="makeSnapshot(snapName.value); snapName.value = ''" class="btn btn-success btn-sm">New snapshot</button></td>
-        </tr>
-        <tr *ngFor="let snapshot of snapshots">
-          <td>{{snapshot.name}}</td>
-          <td>{{getSnapDate(snapshot)}}</td>
-          <td><button class="btn btn-sm btn-danger" (click)="loadSnapshot(snapshot)">Restore</button></td>
-        </tr>
-      </table>
+      <div #snapshotsDiv hidden>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Action</th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label class="sr-only" for="snapName">Name of the deck</label>
+              <input #snapName (keydown.enter)="makeSnapshot(snapName.value); snapName.value = ''" class="form-control input-sm" id="snapName" placeholder="Snapshot name">
+            </td>
+            <td><button (click)="makeSnapshot(snapName.value); snapName.value = ''" class="btn btn-success btn-sm">New snapshot</button></td>
+          </tr>
+          <tr *ngFor="let snapshot of snapshots">
+            <td>{{snapshot.name}}</td>
+            <td>{{getSnapDate(snapshot)}}</td>
+            <td><button class="btn btn-sm btn-warning col-lg-12" (click)="loadSnapshot(snapshot)">Restore</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <hr/>
+      <h3>Current deck state <small>({{deckCount}} cards)</small></h3>
+      <app-quick-recap-display [cards]="deck.cards.getCards()" [cardStorage]="storage" [deckStorage]="deck.cards"></app-quick-recap-display>
+
       <hr/>
     </div>
   </div>

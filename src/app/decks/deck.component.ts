@@ -73,9 +73,14 @@ export class DeckComponent extends DeckViewerComponent implements OnInit {
   }
 
   delete() {
-    if (this.deck.cards.getCards().length > 0) {
+    if (!this.deck.cards.finishedLoading()) {
       return;
     }
+
+    // Add cards into storage
+    this.deck.cards.getCards().forEach(card => {
+      this.storage.addCard(card.card, card.amount, card.amountFoil);
+    });
 
     this.backend.deleteDeck(this.deck.info._id).then(r => {
       if (r.ok) {
