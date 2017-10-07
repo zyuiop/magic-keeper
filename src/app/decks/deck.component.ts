@@ -5,9 +5,26 @@ import {DeckViewerComponent} from "./deck-viewer.component";
 import {LocalCollectionService} from "../services/local-collection.service";
 import {CardStorage} from "../types/card-storage";
 import {AuthService} from "../auth/auth.service";
+import {MagicDeckSnapshot} from "../types/magic-deck-info";
+import {MagicDeck} from "../types/magic-deck";
+import {MagicOwnedCard} from "../types/magic-owned-card";
 
 @Component({
-  templateUrl: 'deck.component.html'
+  templateUrl: 'deck.component.html',
+  styles: [
+    `
+      table {
+        display: table;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      td {
+        padding: 2px;
+        vertical-align: top;
+      }
+    `
+  ]
 })
 export class DeckComponent extends DeckViewerComponent implements OnInit {
   storage: CardStorage;
@@ -32,7 +49,7 @@ export class DeckComponent extends DeckViewerComponent implements OnInit {
   }
 
   get allowed() {
-    return this.auth.isUser(this.deck.info.username);
+    return this.deck === null || this.auth.isUser(this.deck.info.username);
   }
 
   protected shouldBeModifiable() {
@@ -62,10 +79,63 @@ export class DeckComponent extends DeckViewerComponent implements OnInit {
 
     this.backend.deleteDeck(this.deck.info._id).then(r => {
       if (r.ok) {
-        this.router.navigate(['/decks', {name: this.deck.info.username}]);
+        this.router.navigate(['/decks', this.deck.info.username]);
       }
     }).catch(err => {
       alert(err);
+    });
+  }
+
+  makeSnapshot(name: string) {
+    this.backend.makeSnapshot(this.deck, name).then(snap => {
+      this.deck.info.snapshots.push(snap);
+    });
+  }
+
+  get snapshots() {
+    return this.deck.info.snapshots.sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+  }
+
+  getSnapDate(snap: MagicDeckSnapshot) {
+    const data = new Date(snap.date);
+    return data.toLocaleDateString() + " " + data.toLocaleTimeString();
+  }
+
+  loadSnapshot(snap: MagicDeckSnapshot) {
+    if (this.deck === null) {
+      return;
+    }
+
+    console.log("Requesting snapshot load " + snap.name + " / " + snap.date + " / " + snap.cards);
+
+    const oldCards = this.deck.cards;
+    const oldInfo = this.deck.info;
+    this.deck = null;
+
+    const data = this.backend.loadCards(snap.cards);
+    console.log("Loading cards...");
+
+    data.onComplete(map => {
+      console.log("Cards load done");
+      // Replace deck cards
+      const newCards = this.backend.loadLocal(oldInfo._id, data);
+
+      // Update library
+      oldCards.getCards().forEach(card => {
+        this.storage.addCard(card.card, card.amount, card.amountFoil);
+      });
+      newCards.getCards().forEach(card => {
+        this.storage.removeCard(card.card, card.amount, card.amountFoil);
+      });
+
+      // Request online update as well
+      this.backend.updateDeck(oldInfo._id, {cards: newCards.toString()});
+
+      // Finish !
+      this.deck = new MagicDeck(oldInfo, newCards);
+      console.log("Replaced deck")
     });
   }
 }

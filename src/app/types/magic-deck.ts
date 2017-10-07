@@ -1,11 +1,11 @@
-import {MagicDeckInfo} from "./magic-deck-info";
+import {MagicCompleteDeckInfo, MagicDeckInfo} from "./magic-deck-info";
 import {CardStorage} from "./card-storage";
 
 export class MagicDeck {
-  constructor(private _info: MagicDeckInfo, private _cards: CardStorage) {
+  constructor(private _info: MagicCompleteDeckInfo, private _cards: CardStorage) {
   }
 
-  get info(): MagicDeckInfo {
+  get info(): MagicCompleteDeckInfo {
     return this._info;
   }
 

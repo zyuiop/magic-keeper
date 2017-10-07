@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {MagicCompleteDeckInfo, MagicDeckInfo} from "../types/magic-deck-info";
+import {MagicCompleteDeckInfo, MagicDeckInfo, MagicDeckSnapshot} from "../types/magic-deck-info";
 import {LocalCollectionService, LocalStorage} from "../services/local-collection.service";
 import {MagicDeck} from "../types/magic-deck";
 import {DeckStorage} from "../types/deck-storage";
@@ -54,19 +54,40 @@ export class DecksProviderService {
     return this.authHttp.put(this._deckUrl + "/" + id, request, HEADERS).toPromise();
   }
 
+  snapshotDeck(id: string, request: SnapshotCreateRequest): Promise<Response> {
+    return this.authHttp.put(this._deckUrl + "/" + id + "/snapshots", request, HEADERS).toPromise();
+  }
+
+  makeSnapshot(deck: MagicDeck, name: string): Promise<MagicDeckSnapshot> {
+    const request: SnapshotCreateRequest = {cards: deck.cards.toString(), name: name, lands: new Map()};
+
+    return this.snapshotDeck(deck.info._id, request).then(r => {
+      return r.json() as MagicDeckSnapshot;
+    });
+  }
+
+  loadCards(deckCards: string) {
+    return this.loader.loadString(deckCards);
+  }
+
+  loadLocal(deckId: string, partData: PartialData<Map<number, MagicOwnedCard>>) {
+    const storage = new LocalStorage(partData, "onlinedeck." + deckId);
+    storage.addChangeListener(st => {
+      // Update in the cloud
+      this.updateDeck(deckId, {cards: st.toString()});
+    });
+    return storage;
+  }
+
   load(deck: MagicCompleteDeckInfo, modifiable = true): MagicDeck {
     // Build storage
     let storage: CardStorage;
     const cardStr = deck.cards ? deck.cards : null;
-    const partData = this.loader.loadString(cardStr);
+    const partData = this.loadCards(cardStr);
 
     if (this.auth.isUser(deck.username) && modifiable) {
       // Build a "local" storage
-      storage = new LocalStorage(partData, "onlinedeck." + deck._id);
-      storage.addChangeListener(st => {
-        // Update in the cloud
-        this.updateDeck(deck._id, {cards: st.toString()});
-      });
+      storage = this.loadLocal(deck._id, partData);
     } else {
       // Build a "online" storage
       storage = new OnlineCardStorage(partData, deck.username, deck.lastChanged);
@@ -80,4 +101,9 @@ export interface DeckUpdateRequest {
   cards?: string;
   name?: string;
   public?: boolean;
+}
+export interface SnapshotCreateRequest {
+  cards: string;
+  name: string;
+  lands: Map<string, number>;
 }

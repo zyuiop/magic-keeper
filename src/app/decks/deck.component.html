@@ -29,6 +29,28 @@
       <app-quick-recap-display [cards]="deck.cards.getCards()" [cardStorage]="storage" [deckStorage]="deck.cards"></app-quick-recap-display>
       <button *ngIf="deck.cards.getCards().length === 0 && deck.cards.finishedLoading()" class="btn btn-danger" (click)="delete()">Delete deck</button>
       <hr/>
+      <h2>Snapshots</h2>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <label class="sr-only" for="snapName">Name of the deck</label>
+            <input #snapName (keydown.enter)="makeSnapshot(snapName.value); snapName.value = ''" class="form-control input-sm" id="snapName" placeholder="Snapshot name">
+          </td>
+          <td><button (click)="makeSnapshot(snapName.value); snapName.value = ''" class="btn btn-success btn-sm">New snapshot</button></td>
+        </tr>
+        <tr *ngFor="let snapshot of snapshots">
+          <td>{{snapshot.name}}</td>
+          <td>{{getSnapDate(snapshot)}}</td>
+          <td><button class="btn btn-sm btn-danger" (click)="loadSnapshot(snapshot)">Restore</button></td>
+        </tr>
+      </table>
+      <hr/>
     </div>
   </div>
 

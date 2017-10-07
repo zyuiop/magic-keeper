@@ -9,11 +9,14 @@ import {Observable} from "rxjs/Observable";
 export interface PartialData<T> {
   getData(): T;
   isComplete(): boolean;
+
+  onComplete(onComplete: ((result: T) => void)): void;
 }
 
 class PartialDataImpl<T> implements PartialData<T> {
   private _finished: boolean;
   private _data: T;
+  private _completeListeners: ((res: T) => void)[] = [];
 
   constructor(_data: T) {
     this._data = _data;
@@ -23,12 +26,21 @@ class PartialDataImpl<T> implements PartialData<T> {
     return this._data;
   }
 
+  onComplete(onComplete: (result: T) => void): void {
+    this._completeListeners.push(onComplete);
+
+    if (this.isComplete()) {
+      onComplete(this._data);
+    }
+  }
+
   isComplete(): boolean {
     return this._finished;
   }
 
   finish(): void {
     this._finished = true;
+    this._completeListeners.forEach(listener => listener(this._data));
   }
 }
 
