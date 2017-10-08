@@ -1,5 +1,6 @@
 import {MagicOwnedCard} from "./magic-owned-card";
 import {getInternalValue} from "./utils";
+import {isNull, isNullOrUndefined, isUndefined} from "util";
 
 export interface SortCriteria {
   compare(card1: MagicOwnedCard, card2: MagicOwnedCard): number;
@@ -89,8 +90,21 @@ export class StringCriteria extends FieldCriteria {
 }
 
 export class TypeCriteria implements SortCriteria {
+  constructor(private compareList?: string[]) {}
+
   compare(card1: MagicOwnedCard, card2: MagicOwnedCard): number {
-    return card1.card.types[0].localeCompare(card2.card.types[0]);
+    if (isNullOrUndefined(this.compareList)) {
+      return card1.card.types[0].localeCompare(card2.card.types[0]);
+    } else {
+      const index1 = this.compareList.indexOf(card1.card.types[0]);
+      const index2 = this.compareList.indexOf(card2.card.types[0]);
+
+      if (index1 === index2 && index1 === -1) {
+        return card1.card.types[0].localeCompare(card2.card.types[0]);
+      }
+
+      return index1 - index2;
+    }
   }
 
   display(): string {

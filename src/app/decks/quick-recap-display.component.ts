@@ -27,7 +27,7 @@ export class QuickRecapDisplayComponent {
   @Input() deckStorage: CardStorage;
 
 
-  private _comparator = new Comparator([new TypeCriteria(), new NumberCriteria("card.cmc", "osef").reverse()]);
+  private _comparator = new Comparator([new TypeCriteria(["Planeswalker", "Creature", "Artifact", "Enchantment", "Instant", "Sorcery", "Land"]), new NumberCriteria("card.cmc", "osef").reverse()]);
 
   removeOne(card: MagicOwnedCard, foil: boolean) {
     this.deckStorage.removeCard(card.card, foil ? 0 : 1, foil ? 1 : 0);
