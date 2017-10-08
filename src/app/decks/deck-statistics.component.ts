@@ -78,7 +78,7 @@ export class DeckStatisticsComponent implements OnChanges {
     ret.set("W", 0);
     ret.set("X", 0);
 
-    this.cards.forEach(card => {
+    this.cards.filter(card => card.card.types[0] !== "Land").forEach(card => {
       if (card.card.colorIdentity) {
         card.card.colorIdentity.forEach(col => {
           if (!ret.has(col)) {
