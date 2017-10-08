@@ -12,13 +12,13 @@
     </tr>
 
     <ng-template ngFor let-card [ngForOf]="entry.cards">
-      <tr (click)="expandedCard = (expandedCard === card) ? null : card">
+      <tr>
         <td>{{card.amount + card.amountFoil}}</td>
-        <td>{{card.card.name}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.name}})</small></td>
+        <td><a (click)="expandedCard = (expandedCard === card) ? null : card">{{card.card.name}} <small *ngIf="card.card.otherSide">({{card.card.otherSide.name}})</small></a></td>
         <td><span [innerHtml]="card.card.manaCost | replacemana:'small'"></span></td>
         <td *ngIf="deckStorage && deckStorage.allowUpdate()">
-          <a *ngIf="card.amount > 0" (click)="removeOne(card, false)">[-1]</a>
-          <a *ngIf="card.amountFoil > 0" (click)="removeOne(card, true)">[-1foil]</a>
+          <a *ngIf="card.amount > 0" (click)="removeOne(card, false)" class="btn btn-xs btn-danger">-1</a>
+          <a *ngIf="card.amountFoil > 0" (click)="removeOne(card, true)" class="btn btn-xs btn-danger">-1 foil</a>
         </td>
       </tr>
       <tr *ngIf="expandedCard === card" (click)="expandedCard = null">
