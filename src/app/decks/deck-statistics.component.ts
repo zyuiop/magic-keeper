@@ -79,15 +79,14 @@ export class DeckStatisticsComponent implements OnChanges {
     ret.set("X", 0);
 
     this.cards.filter(card => card.card.types[0] !== "Land").forEach(card => {
-      if (card.card.colorIdentity) {
-        card.card.colorIdentity.forEach(col => {
-          if (!ret.has(col)) {
-            ret.set(col, 1);
-          } else {
-            ret.set(col, ret.get(col) + 1);
-          }
-        });
-      }
+      const colorIdentity = (card.card.colorIdentity) ? card.card.colorIdentity : ["X"];
+      colorIdentity.forEach(col => {
+        if (!ret.has(col)) {
+          ret.set(col, card.amount + card.amountFoil);
+        } else {
+          ret.set(col, ret.get(col) + card.amount + card.amountFoil);
+        }
+      });
     });
 
     const retList: TypeWrapper[] = [];
@@ -100,9 +99,9 @@ export class DeckStatisticsComponent implements OnChanges {
     const ret = new Map<number, number>();
     this.cards.filter(card => card.card.types[0] !== "Land").forEach(card => {
       if (!ret.has(card.card.cmc)) {
-        ret.set(card.card.cmc, 1);
+        ret.set(card.card.cmc, card.amount + card.amountFoil);
       } else {
-        ret.set(card.card.cmc, ret.get(card.card.cmc) + 1);
+        ret.set(card.card.cmc, ret.get(card.card.cmc) + card.amount + card.amountFoil);
       }
     });
 
