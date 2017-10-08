@@ -25,6 +25,7 @@ export class QuickRecapDisplayComponent {
   @Input() cards: MagicOwnedCard[];
   @Input() cardStorage: CardStorage;
   @Input() deckStorage: CardStorage;
+  expandedCard: MagicOwnedCard = null;
 
 
   private _comparator = new Comparator([new TypeCriteria(["Planeswalker", "Creature", "Artifact", "Enchantment", "Instant", "Sorcery", "Land"]), new NumberCriteria("card.cmc", "osef").reverse()]);
@@ -58,6 +59,10 @@ export class QuickRecapDisplayComponent {
     }
 
     return ret;
+  }
+
+  print(card: MagicOwnedCard) {
+    alert(card);
   }
 
 }
