@@ -12,6 +12,8 @@
 
     <div class="col-md-4">
       <h2>Cards Summary</h2>
+      <app-deck-statistics [cards]="deck.cards.getCards()"></app-deck-statistics>
+      <hr>
       <app-quick-recap-display [cards]="deck.cards.getCards()"></app-quick-recap-display>
       <hr/>
     </div>

@@ -1,0 +1,11 @@
+<p>Costs distribution:</p>
+<canvas #cmcCanvas width="300" height="150"></canvas>
+<br/>
+<p>Colors distribution:</p>
+<table style="width: 300px;">
+  <tr>
+    <td *ngFor="let color of colorDist">
+      <img src="{{'http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=' + color.name + '&type=symbol' | proxy}}" /> * <b>{{color.amount}}</b>
+    </td>
+  </tr>
+</table>

@@ -68,6 +68,10 @@
 
       <hr/>
       <h3>Current deck state <small>({{deckCount}} cards)</small></h3>
+
+      <app-deck-statistics [cards]="deck.cards.getCards()"></app-deck-statistics>
+      <br>
+      <hr>
       <app-quick-recap-display [cards]="deck.cards.getCards()" [cardStorage]="storage" [deckStorage]="deck.cards"></app-quick-recap-display>
 
       <hr/>
