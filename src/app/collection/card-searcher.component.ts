@@ -79,8 +79,8 @@ export class CardSearcherComponent implements OnInit {
     }
 
     const owned = this.library.getCard(this.currentCard);
-    const ownedAmount = owned.amount;
-    const ownedAmountFoil = owned.amountFoil;
+    const ownedAmount = owned ? owned.amount : 0;
+    const ownedAmountFoil = owned ? owned.amountFoil : 0;
 
     this.library.addCard(this.currentCard, this.amount, this.amountFoil);
     this.message = "Added : " + this.amount + " and " + this.amountFoil + " foil of card <b>" + this.currentCard.name + "</b>";
