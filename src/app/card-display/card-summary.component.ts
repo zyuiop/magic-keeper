@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {MagicCard} from "../types/magic-card";
+import {MagicOwnedCard} from "../types/magic-owned-card";
 
 @Component({
   selector: 'app-card-summary',
@@ -7,6 +8,7 @@ import {MagicCard} from "../types/magic-card";
 })
 export class CardSummaryComponent {
   @Input() card: MagicCard;
+  @Input() ownedCardData: MagicOwnedCard;
   @Input() reducedInfo = false;
   @Input() secondSide = false; // if this is the second side of the card
 }

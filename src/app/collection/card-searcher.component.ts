@@ -42,6 +42,10 @@ export class CardSearcherComponent implements OnInit {
     this.error = null;
   }
 
+  get ownedCard() {
+    return this.library.getCard(this.currentCard);
+  }
+
   onSearch(): void {
     this.error = null;
     this.searching = true;
@@ -55,7 +59,7 @@ export class CardSearcherComponent implements OnInit {
           this.cardAmount.nativeElement.focus();
           this.amount = null;
           this.amountFoil = null;
-        }, 50);
+        }, 25);
       }
     }).catch(err => {
       this.error = "Error while searching : " + err;
@@ -74,8 +78,13 @@ export class CardSearcherComponent implements OnInit {
       this.amountFoil = 0;
     }
 
+    const owned = this.library.getCard(this.currentCard);
+
     this.library.addCard(this.currentCard, this.amount, this.amountFoil);
-    this.message = "Added : " + this.amount + " and " + this.amountFoil + " of card <b>" + this.currentCard.name + "</b>";
+    this.message = "Added : " + this.amount + " and " + this.amountFoil + " foil of card <b>" + this.currentCard.name + "</b>";
+    if (owned && owned != null) {
+      this.message += "<br>Already owned " + owned.amount + " and " + owned.amountFoil + " foil of this card.";
+    }
     this.amount = null;
     this.amountFoil = null;
     this.currentCard = null;

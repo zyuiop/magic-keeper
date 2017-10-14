@@ -80,6 +80,10 @@ export class LocalStorage implements CardStorage, CardProvider {
     this.notifyUpdate();
   }
 
+  getCard(card: MagicCard): MagicOwnedCard {
+    return this.cards.get(card.multiverseid);
+  }
+
   addChangeListener(listener: ((storage: LocalStorage) => void)) {
     this._changeListeners.push(listener);
   }

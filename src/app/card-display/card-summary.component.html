@@ -5,6 +5,7 @@
   <p><b>{{card.type}}</b> <span *ngIf="card.power && card.toughness">| <b>{{card.power}} / {{card.toughness}}</b></span></p>
   <p *ngIf="!reducedInfo && card.text" [innerHtml]="card.text | replacenl | replacemana:'small'"></p>
   <p *ngIf="!reducedInfo && card.flavor" style="font-style: italic" [innerHtml]="card.flavor | replacenl"></p>
+  <p *ngIf="!reducedInfo && ownedCardData" style="font-style: italic">Already in library: <span class="label label-info">{{ownedCardData.amount}}</span> and <span class="label label-warning">{{ownedCardData.amountFoil}}</span> foil</p>
 </div>
   <app-card-summary *ngIf="card.otherSide && !secondSide" [card]="card.otherSide" [secondSide]="true" [reducedInfo]="reducedInfo"></app-card-summary>
 </div>

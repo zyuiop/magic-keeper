@@ -21,6 +21,9 @@ export class OnlineCardStorage implements CardStorage {
   removeCard(card: MagicCard, amount: number, amountFoil: number): void {
     throw new Error("Method not implemented.");
   }
+  getCard(card: MagicCard): MagicOwnedCard {
+    return this.cards.getData().get(card.multiverseid);
+  }
 
   allowUpdate(): boolean {
     return false;

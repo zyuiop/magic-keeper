@@ -13,6 +13,8 @@ export interface CardStorage {
    */
   addCard(card: MagicCard, amount: number, amountFoil: number): void;
 
+  getCard(card: MagicCard): MagicOwnedCard;
+
   /**
    * Remove a given amount of a given card
    * @param {MagicCard} card
