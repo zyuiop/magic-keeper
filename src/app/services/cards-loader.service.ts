@@ -44,18 +44,37 @@ class PartialDataImpl<T> implements PartialData<T> {
   }
 }
 
+class CachedCard {
+  card: MagicCard;
+  usages: number;
+}
+
 @Injectable()
 export class CardsLoaderService {
-  private cache: Map<number, MagicCard>;
 
   constructor(private api: MagicApiService) {
   }
 
+  private getCached(card: number): MagicCard {
+    const item = localStorage.getItem("card.cache." + card);
+    return item === null ? null : JSON.parse(item).card;
+  }
+
+  private cacheCard(card: MagicCard) {
+    const item = localStorage.getItem("card.cache." + card.multiverseid);
+    let cached: CachedCard;
+    if (item != null) {
+      cached = JSON.parse(item);
+      cached.usages ++;
+    } else {
+      cached = {card: card, usages: 1};
+    }
+    localStorage.setItem("card.cache." + card.multiverseid, JSON.stringify(cached));
+  }
+
   private merge(map: Map<number, MagicOwnedCard>, otherMap: Map<number, MagicOwnedCard>): void {
     otherMap.forEach((card: MagicOwnedCard, key: number) => {
-      if (!this.cache.has(key)) {
-        this.cache.set(key, card.card);
-      }
+      this.cacheCard(card.card);
 
       if (card.amount <= 0 && card.amountFoil <= 0) {
         return;
@@ -89,9 +108,12 @@ export class CardsLoaderService {
         // add 100 cards in the "stack"
         while (storedCards.length > 0 && stackSize < 100) {
           const cur = storedCards.pop();
-          if (this.cache.has(cur.cardId)) {
+
+          const cached = this.getCached(cur.cardId);
+
+          if (cached !== null) {
             const other = new Map<number, MagicOwnedCard>();
-            other.set(cur.cardId, new MagicOwnedCard(this.cache.get(cur.cardId), cur.amount, cur.amountFoil));
+            other.set(cur.cardId, new MagicOwnedCard(cached, cur.amount, cur.amountFoil));
             this.merge(map, other);
             continue;
           }
@@ -120,7 +142,7 @@ export class CardsLoaderService {
         });
       }
 
-      if (counter === 0) {
+      if (counter === 0 || todo === 0) {
         partial.finish();
       }
     } else {
