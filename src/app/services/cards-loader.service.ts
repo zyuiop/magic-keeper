@@ -46,11 +46,17 @@ class PartialDataImpl<T> implements PartialData<T> {
 
 @Injectable()
 export class CardsLoaderService {
+  private cache: Map<number, MagicCard>;
+
   constructor(private api: MagicApiService) {
   }
 
   private merge(map: Map<number, MagicOwnedCard>, otherMap: Map<number, MagicOwnedCard>): void {
     otherMap.forEach((card: MagicOwnedCard, key: number) => {
+      if (!this.cache.has(key)) {
+        this.cache.set(key, card.card);
+      }
+
       if (card.amount <= 0 && card.amountFoil <= 0) {
         return;
       }
@@ -83,6 +89,14 @@ export class CardsLoaderService {
         // add 100 cards in the "stack"
         while (storedCards.length > 0 && stackSize < 100) {
           const cur = storedCards.pop();
+          if (this.cache.has(cur.cardId)) {
+            const other = new Map<number, MagicOwnedCard>();
+            other.set(cur.cardId, new MagicOwnedCard(this.cache.get(cur.cardId), cur.amount, cur.amountFoil));
+            this.merge(map, other);
+            continue;
+          }
+
+
           stack.set(cur.cardId, cur);
           stackSize++;
           if (cur.double) {
