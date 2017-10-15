@@ -5,6 +5,8 @@ import {MagicCard} from "../types/magic-card";
 import {CardStorage} from "../types/card-storage";
 import {CardProvider} from "../types/card-provider";
 import {Observable} from "rxjs/Observable";
+import {count} from "rxjs/operator/count";
+import {isNullOrUndefined, isUndefined} from "util";
 
 export interface PartialData<T> {
   getData(): T;
@@ -45,47 +47,66 @@ class PartialDataImpl<T> implements PartialData<T> {
 }
 
 class CachedCard {
+  multiverseid: number;
   card: MagicCard;
   usages: number;
 }
 
 @Injectable()
 export class CardsLoaderService {
+  private _database: IDBDatabase;
 
   constructor(private api: MagicApiService) {
   }
 
-  private getCached(card: number): MagicCard {
-    const item = localStorage.getItem("card.cache." + card);
-    return item === null ? null : JSON.parse(item).card;
+  private getDatabase(callback: ((database: IDBDatabase) => void)) {
+    if (!isUndefined(this._database)) {
+      callback(this._database);
+    } else {
+      const req = indexedDB.open("CacheDatabase", 2);
+
+      req.onsuccess = (e: any) => {
+        this._database = e.target.result;
+        callback(this._database);
+      };
+
+      req.onupgradeneeded = (e: any) => {
+        const db = e.target.result;
+        const objectStore = db.createObjectStore("cache", {keyPath: "multiverseid"});
+      };
+    }
+  }
+
+  private getCached(card: number, callback: ((value: MagicCard) => void)) {
+    this.getDatabase(database => {
+      const store = database.transaction(["cache"], "readonly").objectStore("cache");
+
+      const request = store.get(card);
+
+      request.onsuccess = (e: any) => {
+        const result = (request.result as CachedCard);
+        callback(isNullOrUndefined(result) ? null : result.card);
+      };
+    });
   }
 
   private cacheCard(card: MagicCard) {
-    const item = localStorage.getItem("card.cache." + card.multiverseid);
-    let cached: CachedCard;
-    if (item != null) {
-      cached = JSON.parse(item);
-      cached.usages ++;
-    } else {
-      cached = {card: card, usages: 1};
-    }
-    localStorage.setItem("card.cache." + card.multiverseid, JSON.stringify(cached));
-  }
+    this.getDatabase(database => {
 
-  private merge(map: Map<number, MagicOwnedCard>, otherMap: Map<number, MagicOwnedCard>): void {
-    otherMap.forEach((card: MagicOwnedCard, key: number) => {
-      this.cacheCard(card.card);
+      const store = database.transaction(["cache"], "readwrite").objectStore("cache");
 
-      if (card.amount <= 0 && card.amountFoil <= 0) {
-        return;
-      }
+      const request = store.get(card.multiverseid);
+      request.onsuccess = (event) => {
+        let stored = request.result;
 
-      if (map.has(card.card.multiverseid)) {
-        map.get(card.card.multiverseid).increaseFoil(card.amountFoil);
-        map.get(card.card.multiverseid).increase(card.amount);
-      } else {
-        map.set(card.card.multiverseid, card);
-      }
+        if (isNullOrUndefined(stored)) {
+          stored = {card: card, usages: 1, multiverseid: card.multiverseid};
+        } else {
+          stored.usages++;
+        }
+
+        store.put(stored);
+      };
     });
   }
 
@@ -93,56 +114,82 @@ export class CardsLoaderService {
     return this.loadString(localStorage.getItem(storageKey));
   }
 
+  private addCard(map: Map<number, MagicOwnedCard>, card: MagicOwnedCard) {
+    if (card.amount <= 0 && card.amountFoil <= 0) {
+      return;
+    }
+
+    if (map.has(card.card.multiverseid)) {
+      map.get(card.card.multiverseid).increaseFoil(card.amountFoil);
+      map.get(card.card.multiverseid).increase(card.amount);
+    } else {
+      map.set(card.card.multiverseid, card);
+    }
+  }
+
+  private merge(map: Map<number, MagicOwnedCard>, otherMap: Map<number, MagicOwnedCard>): void {
+    otherMap.forEach((card: MagicOwnedCard, key: number) => {
+      this.cacheCard(card.card);
+      this.addCard(map, card);
+    });
+  }
+
   loadString(stored: string): PartialData<Map<number, MagicOwnedCard>> {
     const map: Map<number, MagicOwnedCard> = new Map();
     const partial = new PartialDataImpl(map);
-    let todo = 0;
 
     if (stored !== null && stored.length > 0) {
-      let counter = 0;
       const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
 
+      let apiRequests = 0;
+      let dbRequests = 0;
+      let stack: Map<number, MagicReducedOwnedCard> = new Map();
+      let stackSize = 0;
+      let finished = false;
+
       while (storedCards.length > 0) {
-        const stack: Map<number, MagicReducedOwnedCard> = new Map();
-        let stackSize = 0;
-        // add 100 cards in the "stack"
-        while (storedCards.length > 0 && stackSize < 100) {
-          const cur = storedCards.pop();
+        const cur = storedCards.pop(); // We fetch all the stored cards
+        dbRequests ++;
 
-          const cached = this.getCached(cur.cardId);
+        this.getCached(cur.cardId, card => {
+          dbRequests --;
+          if (card !== null) {
+            this.addCard(map, new MagicOwnedCard(card, cur.amount, cur.amountFoil));
 
-          if (cached !== null) {
-            const other = new Map<number, MagicOwnedCard>();
-            other.set(cur.cardId, new MagicOwnedCard(cached, cur.amount, cur.amountFoil));
-            this.merge(map, other);
-            continue;
-          }
+            if (dbRequests === 0 && finished && apiRequests === 0) {
+              partial.finish();
+            }
+          } else {
+            stack.set(cur.cardId, cur);
+            stackSize++;
+            if (cur.double) {
+              stackSize++; // double cards
+            }
 
+            if ((dbRequests === 0 && finished) || stackSize === 100) {
+              const oldStack = stack;
+              stackSize = 0;
+              stack = new Map();
+              apiRequests ++;
 
-          stack.set(cur.cardId, cur);
-          stackSize++;
-          if (cur.double) {
-            stackSize++; // double cards
-          }
-        }
-
-        // process the "stack"
-        const cid = ++counter;
-        todo++;
-
-        console.log("Sending request " + cid + " with " + stack.size + " cards");
-        console.log(stack);
-        this.api.getCards(stack).then(res => {
-          console.log("Reply for request " + cid + " with " + res.size + " cards");
-          console.log(res);
-          this.merge(map, res);
-          if (--todo === 0) {
-            partial.finish();
+              console.log("Sending request with " + stack.size + " cards");
+              console.log(oldStack);
+              this.api.getCards(oldStack).then(res => {
+                console.log("Reply for request with " + res.size + " cards");
+                console.log(res);
+                this.merge(map, res);
+                if (--apiRequests === 0 && finished) {
+                  partial.finish();
+                }
+              });
+            }
           }
         });
       }
 
-      if (counter === 0 || todo === 0) {
+      finished = true;
+
+      if (apiRequests === 0 && dbRequests === 0) {
         partial.finish();
       }
     } else {
