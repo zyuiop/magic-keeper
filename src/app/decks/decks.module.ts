@@ -11,9 +11,10 @@ import {QuickRecapDisplayComponent} from "./quick-recap-display.component";
 import {CardDisplayModule} from "../card-display/card-display.module";
 import {FormsModule} from "@angular/forms";
 import {DeckStatisticsComponent} from "./deck-statistics.component";
+import {DeckHistoryComponent} from "./deck-history.component";
 
 @NgModule({
-  declarations: [DecksComponent, DeckComponent, DeckViewerComponent, QuickRecapDisplayComponent, DeckStatisticsComponent],
+  declarations: [DecksComponent, DeckComponent, DeckViewerComponent, QuickRecapDisplayComponent, DeckStatisticsComponent, DeckHistoryComponent],
   imports: [BrowserModule, DecksRoutingModule, CollectionLoadingModule, CardListModule, CardDisplayModule, FormsModule],
   providers: [DecksProviderService]
 })

@@ -140,7 +140,7 @@ export class DeckComponent extends DeckViewerComponent implements OnInit {
 
       // Finish !
       this.deck = new MagicDeck(oldInfo, newCards);
-      console.log("Replaced deck")
+      console.log("Replaced deck");
     });
   }
 }

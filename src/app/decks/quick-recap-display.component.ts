@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {MagicOwnedCard} from "../types/magic-owned-card";
 import {CardStorage} from "../types/card-storage";
 import {Comparator, NumberCriteria, SortCriteria, TypeCriteria} from "../types/sort";
@@ -25,15 +25,16 @@ export class QuickRecapDisplayComponent {
   @Input() cards: MagicOwnedCard[];
   @Input() cardStorage: CardStorage;
   @Input() deckStorage: CardStorage;
-  expandedCard: MagicOwnedCard = null;
+  expandedCard: MagicOwnedCard;
 
-
-  private _comparator = new Comparator([new TypeCriteria(["Planeswalker", "Creature", "Artifact", "Enchantment", "Instant", "Sorcery", "Land"]), new NumberCriteria("card.cmc", "osef").reverse()]);
+  private _comparator = new Comparator([new TypeCriteria(["Planeswalker", "Creature", "Artifact", "Enchantment",
+    "Instant", "Sorcery", "Land"]), new NumberCriteria("card.cmc", "osef").reverse()]);
 
   removeOne(card: MagicOwnedCard, foil: boolean) {
     this.deckStorage.removeCard(card.card, foil ? 0 : 1, foil ? 1 : 0);
     this.cardStorage.addCard(card.card, foil ? 0 : 1, foil ? 1 : 0);
   }
+
 
   get sorted(): TypeWrapper[] {
     const ret: TypeWrapper[] = [];
@@ -59,10 +60,6 @@ export class QuickRecapDisplayComponent {
     }
 
     return ret;
-  }
-
-  print(card: MagicOwnedCard) {
-    alert(card);
   }
 
 }

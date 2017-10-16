@@ -5,6 +5,7 @@ import {MagicCard} from "../types/magic-card";
 import {CardStorage} from "../types/card-storage";
 import {CardProvider} from "../types/card-provider";
 import {Observable} from "rxjs/Observable";
+import {startTimeRange} from "@angular/core/src/profile/wtf_impl";
 
 export interface PartialData<T> {
   getData(): T;
@@ -93,62 +94,70 @@ export class CardsLoaderService {
     return this.loadString(localStorage.getItem(storageKey));
   }
 
-  loadString(stored: string): PartialData<Map<number, MagicOwnedCard>> {
+  loadFromReducedArray(storedCards: MagicReducedOwnedCard[]): PartialData<Map<number, MagicOwnedCard>> {
     const map: Map<number, MagicOwnedCard> = new Map();
     const partial = new PartialDataImpl(map);
+
     let todo = 0;
+    let counter = 0;
 
-    if (stored !== null && stored.length > 0) {
-      let counter = 0;
-      const storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
+    while (storedCards.length > 0) {
+      const stack: Map<number, MagicReducedOwnedCard> = new Map();
+      let stackSize = 0;
+      // add 100 cards in the "stack"
+      while (storedCards.length > 0 && stackSize < 100) {
+        const cur = storedCards.pop();
 
-      while (storedCards.length > 0) {
-        const stack: Map<number, MagicReducedOwnedCard> = new Map();
-        let stackSize = 0;
-        // add 100 cards in the "stack"
-        while (storedCards.length > 0 && stackSize < 100) {
-          const cur = storedCards.pop();
+        const cached = this.getCached(cur.cardId);
 
-          const cached = this.getCached(cur.cardId);
-
-          if (cached !== null) {
-            const other = new Map<number, MagicOwnedCard>();
-            other.set(cur.cardId, new MagicOwnedCard(cached, cur.amount, cur.amountFoil));
-            this.merge(map, other);
-            continue;
-          }
-
-
-          stack.set(cur.cardId, cur);
-          stackSize++;
-          if (cur.double) {
-            stackSize++; // double cards
-          }
+        if (cached !== null) {
+          const other = new Map<number, MagicOwnedCard>();
+          other.set(cur.cardId, new MagicOwnedCard(cached, cur.amount, cur.amountFoil));
+          this.merge(map, other);
+          continue;
         }
 
-        // process the "stack"
-        const cid = ++counter;
-        todo++;
 
-        console.log("Sending request " + cid + " with " + stack.size + " cards");
-        console.log(stack);
-        this.api.getCards(stack).then(res => {
-          console.log("Reply for request " + cid + " with " + res.size + " cards");
-          console.log(res);
-          this.merge(map, res);
-          if (--todo === 0) {
-            partial.finish();
-          }
-        });
+        stack.set(cur.cardId, cur);
+        stackSize++;
+        if (cur.double) {
+          stackSize++; // double cards
+        }
       }
 
-      if (counter === 0 || todo === 0) {
-        partial.finish();
+      if (stackSize === 0) {
+        break;
       }
-    } else {
+
+      // process the "stack"
+      const cid = ++counter;
+      todo++;
+
+      console.log("Sending request " + cid + " with " + stack.size + " cards");
+      console.log(stack);
+      this.api.getCards(stack).then(res => {
+        console.log("Reply for request " + cid + " with " + res.size + " cards");
+        console.log(res);
+        this.merge(map, res);
+        if (--todo === 0) {
+          partial.finish();
+        }
+      });
+    }
+
+    if (counter === 0 || todo === 0) {
       partial.finish();
     }
 
     return partial;
+  }
+
+  loadString(stored: string): PartialData<Map<number, MagicOwnedCard>> {
+    let storedCards = [];
+    if (stored !== null && stored.length > 0) {
+      storedCards = stored.split(";").map(MagicReducedOwnedCard.fromString);
+    }
+
+    return this.loadFromReducedArray(storedCards);
   }
 }

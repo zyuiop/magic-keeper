@@ -6,39 +6,19 @@ import {CardStorage, ChangeListener} from "../types/card-storage";
 import {CardProvider} from "../types/card-provider";
 import {CardsLoaderService, PartialData} from "./cards-loader.service";
 import {BackendService} from "./backend.service";
+import {FixedCardStorage} from "../types/fixed-card-storage";
 
 /**
  * Represents a card storage in which the cards are loaded from the backend
  * Storages loaded this way cannot be modified
  */
-export class OnlineCardStorage implements CardStorage {
-  constructor(private cards: PartialData<Map<number, MagicOwnedCard>>, private _username: string, private _lastChange: string) {};
-
-  addCard(card: MagicCard, amount: number, amountFoil: number): void {
-    throw new Error("Method not implemented.");
-  }
-
-  removeCard(card: MagicCard, amount: number, amountFoil: number): void {
-    throw new Error("Method not implemented.");
-  }
-  getCard(card: MagicCard): MagicOwnedCard {
-    return this.cards.getData().get(card.multiverseid);
-  }
-
-  allowUpdate(): boolean {
-    return false;
-  }
-
-  getCards(): MagicOwnedCard[] {
-    return Array.from(this.cards.getData().values());
+export class OnlineCardStorage extends FixedCardStorage {
+  constructor(cards: PartialData<Map<number, MagicOwnedCard>>, private _username: string, private _lastChange: string) {
+    super(cards);
   }
 
   get username(): string {
     return this._username;
-  }
-
-  finishedLoading(): boolean {
-    return this.cards.isComplete();
   }
 
   lastChange(): Date {

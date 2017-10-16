@@ -1,0 +1,44 @@
+<div *ngIf="deck && allowed">
+  <div class="row">
+    <h1>{{deck.info.name}} deck history <small>
+      <a routerLink="/deck/{{id}}/edit">(go back editing)</a>
+    </small></h1>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <p>New snapshot</p>
+      <select class="form-control" [(ngModel)]="leftName">
+        <option *ngFor="let snap of snapshots" [value]="buildName(snap)">{{snap.name}}</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <p>Old snapshot</p>
+      <select class="form-control" [(ngModel)]="rightName">
+        <option *ngFor="let snap of snapshots" [value]="buildName(snap)">{{snap.name}}</option>
+      </select>
+    </div>
+  </div>
+  <hr>
+
+  <div *ngIf="diff">
+    <div class="row">
+      <p *ngIf="diff.added.getCards().length === 0 && diff.removed.getCards().length === 0">
+        <i>The two snapshots are identical</i>
+      </p>
+
+      <div *ngIf="diff.added.getCards().length > 0" class="col-md-6">
+        <h3>Cards added ({{count(diff.added)}})</h3>
+        <app-quick-recap-display [cards]="diff.added.getCards()"></app-quick-recap-display>
+      </div>
+      <div *ngIf="diff.removed.getCards().length > 0" class="col-md-6">
+        <h3>Cards removed ({{count(diff.removed)}})</h3>
+        <app-quick-recap-display [cards]="diff.removed.getCards()"></app-quick-recap-display>
+      </div>
+    </div>
+    <hr>
+  </div>
+
+</div>
+
+<app-collection-loading *ngIf="!diff || !allowed" [error]="!allowed ? 'you need to login to access this page' : error"></app-collection-loading>

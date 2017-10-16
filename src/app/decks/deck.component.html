@@ -40,6 +40,7 @@
       </div>
       <hr/>
       <h3>Snapshots
+        <small><a routerLink="/deck/{{id}}/history">(see changes)</a></small>
         <button *ngIf="snapshotsDiv.hidden" (click)="snapshotsDiv.hidden = false" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-down"></b></button>
         <button *ngIf="!snapshotsDiv.hidden" (click)="snapshotsDiv.hidden = true" class="btn btn-link btn-xs"><b class="glyphicon glyphicon-chevron-right"></b></button>
       </h3>
